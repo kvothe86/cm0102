@@ -8,7 +8,7 @@
   
   <style id="skin-style">
     /* ==========================================================================
-       1. CSS VARIABELEN & THEMA (V23 STIJL)
+       CSS & STYLING
        ========================================================================== */
     :root {
       --bg: #0f1115; --panel: #161b22; --card: #1c2128;
@@ -34,7 +34,6 @@
       --font: 'Verdana', Geneva, sans-serif;
     }
 
-    /* BASIS LAYOUT */
     * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; font-family: var(--font); background: var(--bg); color: var(--text); display: flex; min-height: 100vh; overflow-x: hidden; transition: background 0.3s; }
 
@@ -138,7 +137,8 @@
     .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    #error-msg { margin-top: 15px; color: #ff4d4d; font-weight: bold; text-align: center; max-width: 80%; display: none; }
+    /* LOG BOX VOOR DIAGNOSE */
+    #log-box { font-family: monospace; background: #000; color: #38d26f; padding: 10px; border-radius: 8px; width: 90%; max-width: 400px; height: 150px; overflow-y: auto; font-size: 0.8rem; margin-top: 20px; border: 1px solid var(--border); text-align: left; }
 
     #toast { visibility: hidden; min-width: 250px; text-align: center; border-radius: 50px; padding: 12px 24px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background-color: var(--panel); color: var(--text); border: 1px solid var(--accent); opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
     #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
@@ -148,24 +148,14 @@
     body.admin-mode .admin-only { display: flex !important; }
     body.admin-mode button.admin-only { display: inline-flex !important; }
   </style>
-  <script>
-      // Global error handler voor laadproblemen (bijv. script blokkades)
-      window.onerror = function(msg, url, line) {
-          const el = document.getElementById('error-msg');
-          if(el) {
-              el.style.display = 'block';
-              el.innerHTML = "Laden mislukt!<br>Controleer je internet of firewall.<br><small>" + msg + "</small>";
-          }
-      };
-  </script>
 </head>
 <body class="read-only-mode">
 
 <div id="loading" class="loading-overlay">
     <div class="spinner"></div>
-    <div id="loading-txt" style="font-weight:bold; letter-spacing:1px;">VERBINDING MAKEN...</div>
-    <div id="error-msg"></div>
-    <button id="debug-btn" onclick="showDebug()" style="display:none; margin-top:20px; background:var(--panel); color:var(--text); border:1px solid var(--border); padding:8px 16px; cursor:pointer;">Toon Foutmelding</button>
+    <div style="font-weight:bold; letter-spacing:1px;">DIAGNOSE MODUS</div>
+    <!-- HIER KOMEN DE LOGS -->
+    <div id="log-box">Init...</div>
 </div>
 
 <nav>
@@ -193,10 +183,6 @@
   import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, onSnapshot, deleteDoc, writeBatch, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
   import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-  // ==========================================================
-  // --- CONFIGURATIE ---
-  // JOUW SPECIFIEKE GEGEVENS ZIJN HIER INGEVULD
-  // ==========================================================
   const firebaseConfig = {
     apiKey: "AIzaSyCH3EF5ZaqoImtWyEH-wk60So-zJ7XoZsQ",
     authDomain: "cm-career-tracker.firebaseapp.com",
@@ -207,36 +193,30 @@
     measurementId: "G-K09MW4DDMH"
   };
 
-  // Omgevingsvariabele check (negeer dit, is voor interne werking)
   const envConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
   const appId = typeof __app_id !== 'undefined' ? __app_id : 'cm-pro-v1';
 
-  // Debug Timer: Toont knop als laden langer dan 4s duurt
-  setTimeout(() => {
-      const load = document.getElementById('loading');
-      if(load && !load.classList.contains('hidden')) {
-          document.getElementById('debug-btn').style.display = 'block';
-          document.getElementById('loading-txt').innerText = "DUURT LANG...";
+  // --- DIAGNOSE FUNCTIE ---
+  function logToUI(msg, type="info") {
+      const box = document.getElementById('log-box');
+      if(box) {
+          const color = type==='error' ? '#ff4d4d' : '#38d26f';
+          box.innerHTML += `<div style="color:${color}; margin-bottom:4px;">> ${msg}</div>`;
+          box.scrollTop = box.scrollHeight;
       }
-  }, 4000);
+      console.log(msg);
+  }
 
-  window.showDebug = () => {
-      const errEl = document.getElementById('error-msg');
-      errEl.style.display = 'block';
-      errEl.innerHTML = "<b>Mogelijke oorzaken:</b><br>1. Domein niet toegestaan in Firebase Console (Authentication > Settings > Authorized Domains).<br>2. Firebase Authentication staat niet op 'Anonymous'.";
-  };
-
-  // Init Firebase (Eén keer, veilig opgestart)
+  // Init Firebase
   let app, db, auth;
   try {
+      logToUI("Firebase SDK Laden...");
       app = initializeApp(envConfig);
       db = getFirestore(app);
       auth = getAuth(app);
-      console.log("Firebase gestart");
+      logToUI("Firebase SDK Geïnitialiseerd.");
   } catch(e) { 
-      console.error("Firebase init fout", e); 
-      document.getElementById('error-msg').innerText = "Init Fout: " + e.message;
-      document.getElementById('error-msg').style.display = 'block';
+      logToUI("CRITISCH: Firebase start niet: " + e.message, "error"); 
   }
 
   // --- STATE ---
@@ -257,46 +237,63 @@
   async function init() {
     applyTheme();
     try {
-      // Check config completeness
-      if(firebaseConfig.apiKey.includes("PLAK_HIER")) throw new Error("ConfigKeysMissing");
+      logToUI("Bezig met authenticatie...");
+      
+      // Probeer in te loggen met timeout
+      const loginPromise = signInAnonymously(auth);
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AuthTimeout")), 8000));
+      
+      await Promise.race([loginPromise, timeoutPromise]);
+      logToUI("Ingelogd (Anoniem) ✅");
 
-      await signInAnonymously(auth);
       onAuthStateChanged(auth, (user) => {
         if (user) {
+           logToUI("Auth State Bevestigd. ID: " + user.uid.substring(0,5)+"...");
            setupListeners();
+        } else {
+           logToUI("Geen gebruiker gevonden.", "error");
         }
       });
     } catch(e) {
-      const msgDiv = document.getElementById('error-msg');
-      msgDiv.style.display = 'block';
-      document.getElementById('debug-btn').style.display = 'none'; // fout al getoond
-      
-      if(e.message === "ConfigKeysMissing") {
-          msgDiv.innerHTML = "<b>LET OP:</b><br>Je hebt de API Keys nog niet ingevuld in index.html!";
+      if(e.message === "AuthTimeout") {
+          logToUI("TIMEOUT: Inloggen duurt te lang.", "error");
+          logToUI("OORZAAK: Waarschijnlijk draai je dit lokaal (file://). Upload naar GitHub Pages of voeg localhost toe in Firebase Console.", "error");
       } else {
-          msgDiv.innerHTML = "<b>Verbindingsfout:</b><br>" + e.message + "<br><br>Check of je domein in Firebase Console is toegevoegd.";
+          logToUI("Auth Fout: " + e.message, "error");
       }
     }
   }
 
   function setupListeners() {
+    logToUI("Verbinden met Firestore Database...");
+    
+    // Config listener
     const cfgRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings');
     onSnapshot(cfgRef, (snap) => {
         if(snap.exists()) cfg = snap.data();
-        else setDoc(cfgRef, cfg);
+        else {
+             logToUI("Geen settings gevonden. Nieuwe aanmaken...");
+             setDoc(cfgRef, cfg).catch(e => logToUI("Kan settings niet schrijven: "+e.message, "error"));
+        }
         render();
-    }, (err) => console.error("Config load error", err));
+    }, (err) => {
+        logToUI("Fout bij laden Settings: " + err.message, "error");
+        if(err.code === 'permission-denied') logToUI("Toegang geweigerd. Check Security Rules.", "error");
+    });
 
+    // Players listener
     const pRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
     onSnapshot(pRef, (snap) => {
+        logToUI(`Data ontvangen! (${snap.size} managers)`);
         players = [];
         snap.forEach(d => players.push({id: d.id, ...d.data()}));
-        document.getElementById('loading').classList.add('hidden'); // Verberg loader
+        
+        // ALLES GELUKT!
+        document.getElementById('loading').classList.add('hidden'); 
         if(!activeRadP && players.length) activeRadP = players[0].id;
         render();
     }, (err) => {
-        document.getElementById('error-msg').style.display = 'block';
-        document.getElementById('error-msg').innerText = "Data Fout: " + err.message;
+        logToUI("Fout bij laden Spelers: " + err.message, "error");
     });
   }
 
