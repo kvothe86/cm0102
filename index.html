@@ -195,25 +195,26 @@
 
   // ==========================================================
   // --- CONFIGURATIE ---
-  // VUL HIERONDER DE GEGEVENS IN DIE JE VAN GOOGLE KREEG
+  // JOUW SPECIFIEKE GEGEVENS ZIJN HIER INGEVULD
   // ==========================================================
-const firebaseConfig = {
-  apiKey: "AIzaSyCH3EF5ZaqoImtWyEH-wk60So-zJ7XoZsQ",
-  authDomain: "cm-career-tracker.firebaseapp.com",
-  projectId: "cm-career-tracker",
-  storageBucket: "cm-career-tracker.firebasestorage.app",
-  messagingSenderId: "514929330030",
-  appId: "1:514929330030:web:4ff260e4bfb15e5fdee37f",
-  measurementId: "G-K09MW4DDMH"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyCH3EF5ZaqoImtWyEH-wk60So-zJ7XoZsQ",
+    authDomain: "cm-career-tracker.firebaseapp.com",
+    projectId: "cm-career-tracker",
+    storageBucket: "cm-career-tracker.firebasestorage.app",
+    messagingSenderId: "514929330030",
+    appId: "1:514929330030:web:4ff260e4bfb15e5fdee37f",
+    measurementId: "G-K09MW4DDMH"
+  };
 
+  // Omgevingsvariabele check (negeer dit, is voor interne werking)
   const envConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
   const appId = typeof __app_id !== 'undefined' ? __app_id : 'cm-pro-v1';
 
-  // Debug Timer
+  // Debug Timer: Toont knop als laden langer dan 4s duurt
   setTimeout(() => {
       const load = document.getElementById('loading');
-      if(!load.classList.contains('hidden')) {
+      if(load && !load.classList.contains('hidden')) {
           document.getElementById('debug-btn').style.display = 'block';
           document.getElementById('loading-txt').innerText = "DUURT LANG...";
       }
@@ -222,21 +223,16 @@ const firebaseConfig = {
   window.showDebug = () => {
       const errEl = document.getElementById('error-msg');
       errEl.style.display = 'block';
-      
-      if(firebaseConfig.apiKey.includes("PLAK_HIER")) {
-         errEl.innerHTML = "<b>Fout: Config niet ingevuld.</b><br>Open index.html en vul de Firebase keys in.";
-         return;
-      }
-      
-      errEl.innerHTML = "<b>Mogelijke oorzaken:</b><br>1. Domein niet toegestaan in Firebase Console (Authentication > Settings > Authorized Domains).<br>2. Config keys onjuist.<br>3. Firebase Authentication staat niet op 'Anonymous'.";
+      errEl.innerHTML = "<b>Mogelijke oorzaken:</b><br>1. Domein niet toegestaan in Firebase Console (Authentication > Settings > Authorized Domains).<br>2. Firebase Authentication staat niet op 'Anonymous'.";
   };
 
-  // Init Firebase
+  // Init Firebase (Eén keer, veilig opgestart)
   let app, db, auth;
   try {
       app = initializeApp(envConfig);
       db = getFirestore(app);
       auth = getAuth(app);
+      console.log("Firebase gestart");
   } catch(e) { 
       console.error("Firebase init fout", e); 
       document.getElementById('error-msg').innerText = "Init Fout: " + e.message;
