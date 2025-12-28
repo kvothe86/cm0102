@@ -148,6 +148,16 @@
     body.admin-mode .admin-only { display: flex !important; }
     body.admin-mode button.admin-only { display: inline-flex !important; }
   </style>
+  <script>
+      // Global error handler voor als de imports falen (belangrijk!)
+      window.onerror = function(msg, url, line) {
+          const el = document.getElementById('log-box');
+          if(el) {
+              el.innerHTML += "<br><strong style='color:#ff4d4d'>CRITISCHE FOUT:</strong> " + msg;
+              el.innerHTML += "<br>Dit betekent vaak dat de Firebase versie niet kan laden.";
+          }
+      };
+  </script>
 </head>
 <body class="read-only-mode">
 
@@ -155,7 +165,7 @@
     <div class="spinner"></div>
     <div style="font-weight:bold; letter-spacing:1px;">DIAGNOSE MODUS</div>
     <!-- HIER KOMEN DE LOGS -->
-    <div id="log-box">Init...</div>
+    <div id="log-box">Script gestart...</div>
 </div>
 
 <nav>
@@ -179,9 +189,10 @@
 
 <!-- FIREBASE SDK -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, onSnapshot, deleteDoc, writeBatch, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  // We gebruiken hier versie 10.13.1 die zeer stabiel is
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, onSnapshot, deleteDoc, writeBatch, addDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCH3EF5ZaqoImtWyEH-wk60So-zJ7XoZsQ",
@@ -194,8 +205,7 @@
   };
 
   const envConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
-  const appId = typeof __app_id !== 'undefined' ? __app_id : 'cm-pro-v1';
-
+  
   // --- DIAGNOSE FUNCTIE ---
   function logToUI(msg, type="info") {
       const box = document.getElementById('log-box');
@@ -210,7 +220,7 @@
   // Init Firebase
   let app, db, auth;
   try {
-      logToUI("Firebase SDK Laden...");
+      logToUI("Firebase SDK Laden (v10.13.1)...");
       app = initializeApp(envConfig);
       db = getFirestore(app);
       auth = getAuth(app);
@@ -239,16 +249,16 @@
     try {
       logToUI("Bezig met authenticatie...");
       
-      // Probeer in te loggen met timeout
       const loginPromise = signInAnonymously(auth);
-      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AuthTimeout")), 8000));
+      // Timeout verhoogd naar 10s
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("AuthTimeout")), 10000));
       
       await Promise.race([loginPromise, timeoutPromise]);
       logToUI("Ingelogd (Anoniem) ✅");
 
       onAuthStateChanged(auth, (user) => {
         if (user) {
-           logToUI("Auth State Bevestigd. ID: " + user.uid.substring(0,5)+"...");
+           logToUI("Auth OK. ID: " + user.uid.substring(0,5)+"...");
            setupListeners();
         } else {
            logToUI("Geen gebruiker gevonden.", "error");
@@ -257,48 +267,50 @@
     } catch(e) {
       if(e.message === "AuthTimeout") {
           logToUI("TIMEOUT: Inloggen duurt te lang.", "error");
-          logToUI("OORZAAK: Waarschijnlijk draai je dit lokaal (file://). Upload naar GitHub Pages of voeg localhost toe in Firebase Console.", "error");
+          logToUI("CHECK: Staat 'Anonymous' aan in Firebase Console > Authentication?", "error");
       } else {
           logToUI("Auth Fout: " + e.message, "error");
+          if(e.code === 'auth/operation-not-allowed') logToUI("OORZAAK: Anoniem inloggen staat UIT in Firebase Console.", "error");
       }
     }
   }
 
   function setupListeners() {
-    logToUI("Verbinden met Firestore Database...");
+    logToUI("Verbinden met Firestore...");
     
-    // Config listener
-    const cfgRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings');
+    // Config listener - SIMPLER PATH
+    const cfgRef = doc(db, 'settings', 'config');
     onSnapshot(cfgRef, (snap) => {
         if(snap.exists()) cfg = snap.data();
         else {
-             logToUI("Geen settings gevonden. Nieuwe aanmaken...");
-             setDoc(cfgRef, cfg).catch(e => logToUI("Kan settings niet schrijven: "+e.message, "error"));
+             logToUI("Nieuwe setup: settings aanmaken...");
+             setDoc(cfgRef, cfg).catch(e => logToUI("Settings save fout: "+e.message, "error"));
         }
         render();
     }, (err) => {
-        logToUI("Fout bij laden Settings: " + err.message, "error");
-        if(err.code === 'permission-denied') logToUI("Toegang geweigerd. Check Security Rules.", "error");
+        logToUI("Fout Settings: " + err.message, "error");
+        if(err.code === 'permission-denied') logToUI("CHECK: Security Rules moeten op Test Mode staan.", "error");
     });
 
-    // Players listener
-    const pRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
+    // Players listener - SIMPLER PATH
+    const pRef = collection(db, 'players');
     onSnapshot(pRef, (snap) => {
-        logToUI(`Data ontvangen! (${snap.size} managers)`);
+        logToUI(`Data OK! (${snap.size} managers)`);
         players = [];
         snap.forEach(d => players.push({id: d.id, ...d.data()}));
         
-        // ALLES GELUKT!
+        // SUCCES!
         document.getElementById('loading').classList.add('hidden'); 
         if(!activeRadP && players.length) activeRadP = players[0].id;
         render();
     }, (err) => {
-        logToUI("Fout bij laden Spelers: " + err.message, "error");
+        logToUI("Fout Spelers: " + err.message, "error");
     });
   }
 
   // --- ACTIONS ---
-  window.saveConfig = async () => { await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings'), cfg); showToast("Instellingen opgeslagen"); render(); };
+  // Aangepaste paden voor saveConfig
+  window.saveConfig = async () => { await setDoc(doc(db, 'settings', 'config'), cfg); showToast("Instellingen opgeslagen"); render(); };
 
   window.toggleTheme = () => { currentThemeIdx = (currentThemeIdx+1)%themes.length; localStorage.setItem('cm_theme', themes[currentThemeIdx]); applyTheme(); };
   function applyTheme() {
@@ -368,8 +380,9 @@
       if(!isAdmin) return;
       con.innerHTML = `<div class="card"><h2>Manager Toevoegen</h2><div style="display:flex; gap:10px;"><input id="nP" placeholder="Naam..."><button class="btn btn-main" onclick="addP()">+</button></div></div><div class="card"><h2>Lijst</h2>${players.map(p=>`<div class="opt"><span>${esc(p.name)}</span><button class="btn-icon btn-del" onclick="delP('${p.id}')">🗑️</button></div>`).join('')}</div>`;
   }
-  window.addP = async () => { const n=document.getElementById('nP').value; if(n){ await setDoc(doc(collection(db,'artifacts',appId,'public','data','players')), {name:n, seasons:[], rads:[]}); showToast("Toegevoegd"); } };
-  window.delP = async (id) => { if(confirm("Zeker weten?")){ await deleteDoc(doc(db,'artifacts',appId,'public','data','players',id)); } };
+  // Simplified Paths
+  window.addP = async () => { const n=document.getElementById('nP').value; if(n){ await setDoc(doc(collection(db,'players')), {name:n, seasons:[], rads:[]}); showToast("Toegevoegd"); } };
+  window.delP = async (id) => { if(confirm("Zeker weten?")){ await deleteDoc(doc(db,'players',id)); } };
 
   function renderInput(con) {
       if(!isAdmin) return;
@@ -407,7 +420,7 @@
       let t=0, its=[]; document.querySelectorAll('.pt-chk:checked').forEach(c=>{ t+=parseInt(c.dataset.v); its.push(c.dataset.n); });
       let nRads=[...(p.rads||[])]; document.querySelectorAll('.rad-chk').forEach(c=>{ const r=nRads.find(x=>x.id==c.dataset.id); if(r){ r.done=c.checked; if(c.checked) t+=r.pts; } });
       const sDat={ year, club, total:t, items:its, tsName:document.getElementById('iTSN').value, tsGoals:document.getElementById('iTSG').value, rating:document.getElementById('iR').value };
-      await updateDoc(doc(db,'artifacts',appId,'public','data','players',pid), { seasons:[...(p.seasons||[]), sDat], rads:nRads });
+      await updateDoc(doc(db,'players',pid), { seasons:[...(p.seasons||[]), sDat], rads:nRads });
       showToast("Opgeslagen!"); document.getElementById('iC').value=''; updForm();
   };
 
@@ -425,7 +438,7 @@
   };
   window.finRad = async (pick) => {
       const p=players.find(x=>x.id==activeRadP);
-      await updateDoc(doc(db,'artifacts',appId,'public','data','players',activeRadP), { rads:[...(p.rads||[]), {id:Date.now(), s:cfg.currentSeason, text:pick.t, pts:pick.p, done:false}] });
+      await updateDoc(doc(db,'players',activeRadP), { rads:[...(p.rads||[]), {id:Date.now(), s:cfg.currentSeason, text:pick.t, pts:pick.p, done:false}] });
       showToast("Challenge toegewezen!");
   };
 
@@ -497,8 +510,9 @@
       r.onload=async(e)=>{
           const d=JSON.parse(e.target.result); const l=document.getElementById('mLog'); l.innerText="Bezig...";
           const b=writeBatch(db); let c=0;
-          if(d.cfg) b.set(doc(db,'artifacts',appId,'public','data','settings'), d.cfg);
-          if(d.db && d.db.players) d.db.players.forEach(p=>{ b.set(doc(collection(db,'artifacts',appId,'public','data','players')), {name:p.name, seasons:p.seasons||[], rads:p.rads||[]}); c++; });
+          // Updated Paths
+          if(d.cfg) b.set(doc(db,'settings','config'), d.cfg);
+          if(d.db && d.db.players) d.db.players.forEach(p=>{ b.set(doc(collection(db,'players')), {name:p.name, seasons:p.seasons||[], rads:p.rads||[]}); c++; });
           await b.commit(); l.innerHTML=`<b style="color:#38d26f">Klaar! ${c} managers geimporteerd.</b>`; showToast("Succes!");
       }; r.readAsText(f);
   };
