@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="nl">
 <head>
@@ -135,10 +133,12 @@
     .cfg-input { padding: 8px; margin-bottom: 0; height: 36px; }
 
     /* LOADING & TOAST */
-    .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s; pointer-events: none; opacity: 0; }
-    .loading-overlay.active { opacity: 1; pointer-events: all; }
+    .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s; pointer-events: none; opacity: 1; }
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
     .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    #error-msg { margin-top: 15px; color: #ff4d4d; font-weight: bold; text-align: center; max-width: 80%; display: none; }
 
     #toast { visibility: hidden; min-width: 250px; text-align: center; border-radius: 50px; padding: 12px 24px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background-color: var(--panel); color: var(--text); border: 1px solid var(--accent); opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
     #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
@@ -148,12 +148,24 @@
     body.admin-mode .admin-only { display: flex !important; }
     body.admin-mode button.admin-only { display: inline-flex !important; }
   </style>
+  <script>
+      // Global error handler voor laadproblemen (bijv. script blokkades)
+      window.onerror = function(msg, url, line) {
+          const el = document.getElementById('error-msg');
+          if(el) {
+              el.style.display = 'block';
+              el.innerHTML = "Laden mislukt!<br>Controleer je internet of firewall.<br><small>" + msg + "</small>";
+          }
+      };
+  </script>
 </head>
 <body class="read-only-mode">
 
-<div id="loading" class="loading-overlay active">
+<div id="loading" class="loading-overlay">
     <div class="spinner"></div>
-    <div style="font-weight:bold; letter-spacing:1px;">VERBINDING MAKEN...</div>
+    <div id="loading-txt" style="font-weight:bold; letter-spacing:1px;">VERBINDING MAKEN...</div>
+    <div id="error-msg"></div>
+    <button id="debug-btn" onclick="showDebug()" style="display:none; margin-top:20px; background:var(--panel); color:var(--text); border:1px solid var(--border); padding:8px 16px; cursor:pointer;">Toon Foutmelding</button>
 </div>
 
 <nav>
@@ -181,9 +193,10 @@
   import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, onSnapshot, deleteDoc, writeBatch, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
   import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-  
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  // ==========================================================
+  // --- CONFIGURATIE ---
+  // VUL HIERONDER DE GEGEVENS IN DIE JE VAN GOOGLE KREEG
+  // ==========================================================
 const firebaseConfig = {
   apiKey: "AIzaSyCH3EF5ZaqoImtWyEH-wk60So-zJ7XoZsQ",
   authDomain: "cm-career-tracker.firebaseapp.com",
@@ -194,9 +207,29 @@ const firebaseConfig = {
   measurementId: "G-K09MW4DDMH"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+  const envConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : firebaseConfig;
+  const appId = typeof __app_id !== 'undefined' ? __app_id : 'cm-pro-v1';
+
+  // Debug Timer
+  setTimeout(() => {
+      const load = document.getElementById('loading');
+      if(!load.classList.contains('hidden')) {
+          document.getElementById('debug-btn').style.display = 'block';
+          document.getElementById('loading-txt').innerText = "DUURT LANG...";
+      }
+  }, 4000);
+
+  window.showDebug = () => {
+      const errEl = document.getElementById('error-msg');
+      errEl.style.display = 'block';
+      
+      if(firebaseConfig.apiKey.includes("PLAK_HIER")) {
+         errEl.innerHTML = "<b>Fout: Config niet ingevuld.</b><br>Open index.html en vul de Firebase keys in.";
+         return;
+      }
+      
+      errEl.innerHTML = "<b>Mogelijke oorzaken:</b><br>1. Domein niet toegestaan in Firebase Console (Authentication > Settings > Authorized Domains).<br>2. Config keys onjuist.<br>3. Firebase Authentication staat niet op 'Anonymous'.";
+  };
 
   // Init Firebase
   let app, db, auth;
@@ -204,7 +237,11 @@ const analytics = getAnalytics(app);
       app = initializeApp(envConfig);
       db = getFirestore(app);
       auth = getAuth(app);
-  } catch(e) { console.error("Firebase init fout", e); }
+  } catch(e) { 
+      console.error("Firebase init fout", e); 
+      document.getElementById('error-msg').innerText = "Init Fout: " + e.message;
+      document.getElementById('error-msg').style.display = 'block';
+  }
 
   // --- STATE ---
   let players = [];
@@ -224,6 +261,9 @@ const analytics = getAnalytics(app);
   async function init() {
     applyTheme();
     try {
+      // Check config completeness
+      if(firebaseConfig.apiKey.includes("PLAK_HIER")) throw new Error("ConfigKeysMissing");
+
       await signInAnonymously(auth);
       onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -231,7 +271,15 @@ const analytics = getAnalytics(app);
         }
       });
     } catch(e) {
-      document.getElementById('loading').innerHTML = `<div style="color:#ff4d4d; text-align:center;">Geen verbinding.<br>Heb je de Config keys ingevuld?</div>`;
+      const msgDiv = document.getElementById('error-msg');
+      msgDiv.style.display = 'block';
+      document.getElementById('debug-btn').style.display = 'none'; // fout al getoond
+      
+      if(e.message === "ConfigKeysMissing") {
+          msgDiv.innerHTML = "<b>LET OP:</b><br>Je hebt de API Keys nog niet ingevuld in index.html!";
+      } else {
+          msgDiv.innerHTML = "<b>Verbindingsfout:</b><br>" + e.message + "<br><br>Check of je domein in Firebase Console is toegevoegd.";
+      }
     }
   }
 
@@ -241,15 +289,18 @@ const analytics = getAnalytics(app);
         if(snap.exists()) cfg = snap.data();
         else setDoc(cfgRef, cfg);
         render();
-    });
+    }, (err) => console.error("Config load error", err));
 
     const pRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
     onSnapshot(pRef, (snap) => {
         players = [];
         snap.forEach(d => players.push({id: d.id, ...d.data()}));
-        document.getElementById('loading').classList.remove('active');
+        document.getElementById('loading').classList.add('hidden'); // Verberg loader
         if(!activeRadP && players.length) activeRadP = players[0].id;
         render();
+    }, (err) => {
+        document.getElementById('error-msg').style.display = 'block';
+        document.getElementById('error-msg').innerText = "Data Fout: " + err.message;
     });
   }
 
