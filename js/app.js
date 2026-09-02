@@ -1108,4 +1108,4 @@ function impDB(el) { const r=new FileReader(); r.onload=(e)=>{ try{ const i=JSON
 function wipe() { if(confirm("LET OP: Alles wordt verwijderd!")){ db={players:[], currentSeason:"01/02"}; saveAll(); render(); showToast("Gewist", "error"); } }
 
 // Init
-(async function() { updateUI(); await Cloud.init(); warmRadYtPlayer(); tab('dashboard'); })();
+(async function() { updateUI(); await Cloud.init(); tab('dashboard'); })();
