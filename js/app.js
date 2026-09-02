@@ -133,6 +133,16 @@ function toggleTheme() { theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.len
 function showToast(msg, type = 'info') { const x = document.getElementById("toast"); x.innerText = msg; x.className = `show ${type}`; setTimeout(() => { x.className = ""; }, 3000); }
 function esc(str) { if(typeof str!=='string') return str; return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
+function isTrophy(cat, item) {
+  if(cfg.points[cat] && cfg.points[cat][item]) return cfg.points[cat][item].t;
+  for(let c in cfg.points) if(cfg.points[c][item]) return cfg.points[c][item].t;
+  return false;
+}
+function countTrophies(items) {
+  if(!items?.length) return 0;
+  return items.filter(item => isTrophy('', item)).length;
+}
+
 function getRank(pts) {
   const s = Object.entries(cfg.goals).sort((a,b) => a[1] - b[1]);
   let c = "Beginner", min = 0, max = s[0][1], idx = 0;
@@ -256,7 +266,7 @@ function renderDashboard(con) {
 
       // Global Stats
       const totalManagers = db.players.length;
-      const totalTrophies = db.players.reduce((acc, p) => acc + p.seasons.reduce((sa, s) => sa + (s.items?.length || 0), 0), 0);
+      const totalTrophies = db.players.reduce((acc, p) => acc + p.seasons.reduce((sa, s) => sa + countTrophies(s.items), 0), 0);
 
       html += `
       <h2 style="margin-top:2rem; margin-bottom:0.5rem; border:none; color:var(--text); font-size:1.2rem;">Competitie Feiten</h2>
@@ -667,7 +677,7 @@ function renderStats(con) {
            // Fix high score calc to use proper total
            if(s.total > bs.v) bs = {p:p.name, v:s.total, l:s.year};
        });
-       let tc = p.seasons.reduce((a,s)=>(s.items||[]).length+a, 0); if(tc>mt.v) mt={p:p.name, v:tc};
+       let tc = p.seasons.reduce((a,s) => countTrophies(s.items) + a, 0); if(tc>mt.v) mt={p:p.name, v:tc};
        let rc = p.rads.filter(r=>r.done).length; if(rc>rk.v) rk={p:p.name, v:rc};
    });
 
@@ -766,15 +776,14 @@ function renderStats(con) {
 }
 
 function setStatsFilter(pId, val) { statsFilters[pId] = val; render(); }
-function isTrophy(cat, item) { if(cfg.points[cat] && cfg.points[cat][item]) return cfg.points[cat][item].t; for(let c in cfg.points) if(cfg.points[c][item]) return cfg.points[c][item].t; return false; }
 
 function renderTrophies(seasons) {
-    let clubs = {}; seasons.forEach(s => { if(!clubs[s.club]) clubs[s.club] = []; (s.items||[]).forEach(i => clubs[s.club].push(i)); });
+    let clubs = {}; seasons.forEach(s => { if(!clubs[s.club]) clubs[s.club] = []; (s.items||[]).forEach(i => { if(isTrophy('', i)) clubs[s.club].push(i); }); });
     let html = '';
     for(let c in clubs) {
         if(!clubs[c].length) continue;
         let counts = {};
-        clubs[c].forEach(item => { if(isTrophy('Nationaal', item) || isTrophy('Europees', item) || isTrophy(Object.keys(cfg.points)[0], item)) counts[item] = (counts[item]||0)+1; });
+        clubs[c].forEach(item => { if(isTrophy('', item)) counts[item] = (counts[item]||0)+1; });
         if(Object.keys(counts).length === 0) continue;
         html += `<div style="margin-top:0.5rem; font-weight:800; color:var(--muted); text-transform:uppercase; font-size:0.75rem;">${esc(c)}</div>`;
         for(let k in counts) {
@@ -808,7 +817,7 @@ function renderHistory(con) {
    rows.sort((a,b) => b.s.year.localeCompare(a.s.year));
 
    const getTrophies = (r) => {
-      let items = [...(r.s.items || [])];
+      const items = (r.s.items || []).filter(item => isTrophy('', item));
       if(!items.length) return '-';
       return items.join(', ');
    };
