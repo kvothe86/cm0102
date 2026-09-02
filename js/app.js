@@ -221,7 +221,7 @@ function renderDashboard(con) {
   }).sort((a,b)=>b.total-a.total);
 
   let html = `
-    <div class="card">
+    <div class="card flat-hero">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
         <h2>🏆 Klassement</h2>
       </div>
@@ -296,7 +296,7 @@ function renderDashboard(con) {
   const icons = ["🥉", "🥈", "🥇", "💎", "👑"];
 
   let legendHtml = `
-  <div class="card" style="margin-top:1.5rem;">
+  <div class="card flat-dark-block" style="margin-top:1.5rem;">
       <h3 style="margin-bottom:1rem; font-size:1rem; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Ranglijst Legenda</h3>
       <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:1rem;">
           <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem; background:rgba(0,0,0,0.1); border-radius:var(--radius); border:1px solid var(--border);">
