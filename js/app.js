@@ -222,19 +222,19 @@ function renderDashboard(con) {
 
   let html = `
     <div class="card flat-hero">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+      <div class="flat-hero-header">
         <h2>🏆 Klassement</h2>
       </div>
-      <table>
-        <thead><tr><th>#</th><th>Manager</th><th>Rank</th><th>Progressie</th><th style="text-align:right;">Punten</th></tr></thead>
+      <table class="flat-hero-table">
+        <thead><tr><th>#</th><th>Manager</th><th>Rank</th><th>Progressie</th><th class="flat-td-right">Punten</th></tr></thead>
         <tbody>${lb.map((l, i) => {
           const rp = getRank(l.total);
           return `<tr>
-            <td style="color:var(--muted); font-weight:bold;">${i+1}</td>
-            <td style="font-weight:700; font-size:1.05rem;">${esc(l.name)}</td>
-            <td style="font-size:1.5rem; text-align:center;">${rp.icon}</td>
-            <td><div style="width:100%; max-width:200px;"><div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted); margin-bottom:2px;"><span>${rp.name}</span><span>${l.total}/${rp.max}</span></div><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${rp.perc}%"></div></div></div></td>
-            <td style="text-align:right;"><span class="badge">${l.total}</span></td>
+            <td class="flat-hero-muted">${i+1}</td>
+            <td class="flat-hero-name">${esc(l.name)}</td>
+            <td class="flat-hero-rank">${rp.icon}</td>
+            <td><div class="flat-progress-wrap"><div class="flat-progress-labels"><span>${rp.name}</span><span>${l.total}/${rp.max}</span></div><div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${rp.perc}%"></div></div></div></td>
+            <td class="flat-td-right"><span class="badge">${l.total}</span></td>
           </tr>`; }).join('')}
         </tbody>
       </table>
@@ -269,25 +269,27 @@ function renderDashboard(con) {
       const totalTrophies = db.players.reduce((acc, p) => acc + p.seasons.reduce((sa, s) => sa + countTrophies(s.items), 0), 0);
 
       html += `
-      <h2 style="margin-top:2rem; margin-bottom:0.5rem; border:none; color:var(--text); font-size:1.2rem;">Competitie Feiten</h2>
-      <div class="grid-dashboard">
-          <div class="db-widget">
-              <div class="db-val" style="color:var(--primary);">📅 ${uniqueSeasons}</div>
+      <section class="flat-facts-section">
+        <h2 class="flat-section-title">Competitie Feiten</h2>
+        <div class="grid-dashboard flat-facts-grid">
+          <div class="db-widget flat-widget flat-widget-blue">
+              <div class="db-val">📅 ${uniqueSeasons}</div>
               <div class="db-sub">Totaal Seizoenen</div>
           </div>
-          <div class="db-widget">
-              <div class="db-val" style="color:var(--success);">🏆 ${totalTrophies}</div>
+          <div class="db-widget flat-widget flat-widget-green">
+              <div class="db-val">🏆 ${totalTrophies}</div>
               <div class="db-sub">Totaal Prijzen</div>
           </div>
-          <div class="db-widget">
-              <div class="db-val" style="color:var(--accent);">🧳 ${maxClubs.c > 0 ? maxClubs.p : '-'}</div>
+          <div class="db-widget flat-widget flat-widget-purple">
+              <div class="db-val">🧳 ${maxClubs.c > 0 ? maxClubs.p : '-'}</div>
               <div class="db-sub">Clubhopper (${maxClubs.c} clubs)</div>
           </div>
-          <div class="db-widget">
-              <div class="db-val" style="color:var(--accent2);">❤️ ${maxLoyalty.n > 0 ? maxLoyalty.p : '-'}</div>
+          <div class="db-widget flat-widget flat-widget-amber">
+              <div class="db-val">❤️ ${maxLoyalty.n > 0 ? maxLoyalty.p : '-'}</div>
               <div class="db-sub">Clubliefde (${maxLoyalty.n}x ${maxLoyalty.c})</div>
           </div>
-      </div>
+        </div>
+      </section>
       `;
   }
 
@@ -296,21 +298,21 @@ function renderDashboard(con) {
   const icons = ["🥉", "🥈", "🥇", "💎", "👑"];
 
   let legendHtml = `
-  <div class="card flat-dark-block" style="margin-top:1.5rem;">
-      <h3 style="margin-bottom:1rem; font-size:1rem; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Ranglijst Legenda</h3>
-      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:1rem;">
-          <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem; background:rgba(0,0,0,0.1); border-radius:var(--radius); border:1px solid var(--border);">
-              <span style="font-size:1.5rem; width:30px; text-align:center; opacity:0.5;">👶</span>
-              <div><div style="font-weight:700; font-size:0.9rem;">Beginner</div><div style="font-size:0.75rem; color:var(--muted);">0 pnt</div></div>
+  <div class="card flat-dark-block">
+      <h3 class="flat-legend-title">Ranglijst Legenda</h3>
+      <div class="flat-legend-grid">
+          <div class="flat-legend-item">
+              <span class="flat-legend-icon muted">👶</span>
+              <div><div class="flat-legend-name">Beginner</div><div class="flat-legend-pts">0 pnt</div></div>
           </div>
   `;
 
   sortedGoals.forEach((g, i) => {
       const icon = i < icons.length ? icons[i] : "🏆";
       legendHtml += `
-          <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem; background:rgba(0,0,0,0.1); border-radius:var(--radius); border:1px solid var(--border);">
-              <span style="font-size:1.5rem; width:30px; text-align:center;">${icon}</span>
-              <div><div style="font-weight:700; font-size:0.9rem;">${esc(g[0])}</div><div style="font-size:0.75rem; color:var(--muted);">${g[1]} pnt</div></div>
+          <div class="flat-legend-item">
+              <span class="flat-legend-icon">${icon}</span>
+              <div><div class="flat-legend-name">${esc(g[0])}</div><div class="flat-legend-pts">${g[1]} pnt</div></div>
           </div>
       `;
   });

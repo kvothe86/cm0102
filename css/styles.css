@@ -339,6 +339,26 @@ body.admin-mode .admin-only { display: flex !important; }
 .stat-val { font-size: 2rem; font-weight: 900; color: var(--primary); display: block; line-height: 1.2; }
 .stat-lbl { font-size: 0.75rem; text-transform: uppercase; color: var(--muted); font-weight: 700; letter-spacing: 0.05em; margin-top: 0.5rem; }
 
+/* Dashboard layout helpers (all themes) */
+.flat-hero-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.flat-hero-muted { color: var(--muted); font-weight: 700; }
+.flat-hero-name { font-weight: 700; font-size: 1.05rem; }
+.flat-hero-rank { font-size: 1.5rem; text-align: center; }
+.flat-td-right { text-align: right; }
+.flat-progress-wrap { width: 100%; max-width: 220px; }
+.flat-progress-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-bottom: 2px; }
+.flat-facts-section { margin-top: 1.5rem; }
+.flat-section-title { margin: 0 0 0.5rem 0; font-size: 1.2rem; }
+.flat-facts-grid { margin-top: 0.5rem; }
+.flat-legend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; }
+.flat-legend-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: rgba(0,0,0,0.06); border-radius: var(--radius); border: 1px solid var(--border); }
+.flat-legend-icon { font-size: 1.5rem; width: 30px; text-align: center; flex-shrink: 0; }
+.flat-legend-icon.muted { opacity: 0.5; }
+.flat-legend-name { font-weight: 700; font-size: 0.9rem; }
+.flat-legend-pts { font-size: 0.75rem; color: var(--muted); }
+.flat-legend-title { margin-bottom: 1rem; font-size: 1rem; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+.flat-dark-block { margin-top: 1.5rem; }
+
 /* ==========================================================================
    FLAT DESIGN THEME OVERRIDES
    ========================================================================== */
@@ -430,8 +450,8 @@ body.admin-mode .admin-only { display: flex !important; }
   background: var(--bg);
 }
 
-/* Page title band */
-[data-theme="flat"] main > h2 {
+/* Page title band (generic pages) */
+[data-theme="flat"] main > h2:not(.flat-section-title) {
   background: var(--accent);
   color: #fff;
   padding: 0.85rem 1.25rem;
@@ -439,57 +459,6 @@ body.admin-mode .admin-only { display: flex !important; }
   margin-bottom: 1rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-}
-
-/* Hero & footer color blocks (dashboard) */
-[data-theme="flat"] .flat-hero {
-  background: var(--primary);
-  color: #fff;
-}
-[data-theme="flat"] .flat-hero h2,
-[data-theme="flat"] .flat-hero h3 {
-  color: #fff;
-}
-[data-theme="flat"] .flat-hero th {
-  background: rgba(255, 255, 255, 0.18);
-  color: #fff;
-}
-[data-theme="flat"] .flat-hero td {
-  border-bottom-color: rgba(255, 255, 255, 0.22);
-  color: #fff;
-}
-[data-theme="flat"] .flat-hero .rank-bar-bg {
-  background: rgba(255, 255, 255, 0.28);
-}
-[data-theme="flat"] .flat-hero .rank-bar-fill {
-  background: #fff;
-}
-[data-theme="flat"] .flat-hero .badge {
-  background: #fff;
-  color: var(--primary);
-}
-[data-theme="flat"] .flat-hero td[style*="color:var(--muted)"],
-[data-theme="flat"] .flat-hero span[style*="color:var(--muted)"] {
-  color: rgba(255, 255, 255, 0.78) !important;
-}
-
-[data-theme="flat"] .flat-dark-block {
-  background: var(--flat-slate-900);
-  color: #fff;
-}
-[data-theme="flat"] .flat-dark-block h3 {
-  color: rgba(255, 255, 255, 0.9);
-  border-bottom-color: rgba(255, 255, 255, 0.2);
-}
-[data-theme="flat"] .flat-dark-block [style*="grid-template-columns"] > div {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 2px solid rgba(255, 255, 255, 0.14) !important;
-}
-[data-theme="flat"] .flat-dark-block div[style*="font-size:0.75rem"] {
-  color: rgba(255, 255, 255, 0.65) !important;
-}
-[data-theme="flat"] .flat-dark-block div[style*="font-weight:700"] {
-  color: #fff;
 }
 
 /* Alternating card color blocks */
@@ -505,6 +474,160 @@ body.admin-mode .admin-only { display: flex !important; }
 [data-theme="flat"] .card:hover {
   transform: scale(1.01);
 }
+
+/* Dashboard: blue hero klassement block — MUST come after generic .card */
+[data-theme="flat"] .card.flat-hero {
+  background: var(--primary);
+  color: #fff;
+  padding: 1.75rem;
+}
+[data-theme="flat"] .flat-hero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.22);
+}
+[data-theme="flat"] .card.flat-hero h2 {
+  color: #fff;
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+[data-theme="flat"] .flat-hero-table th {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+[data-theme="flat"] .flat-hero-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+[data-theme="flat"] .flat-hero-muted {
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 700;
+}
+[data-theme="flat"] .flat-hero-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+[data-theme="flat"] .flat-hero-rank {
+  font-size: 1.5rem;
+  text-align: center;
+}
+[data-theme="flat"] .flat-td-right {
+  text-align: right;
+}
+[data-theme="flat"] .flat-progress-wrap {
+  width: 100%;
+  max-width: 220px;
+}
+[data-theme="flat"] .flat-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+[data-theme="flat"] .card.flat-hero .rank-bar-bg {
+  background: rgba(255, 255, 255, 0.28);
+}
+[data-theme="flat"] .card.flat-hero .rank-bar-fill {
+  background: #fff;
+}
+[data-theme="flat"] .card.flat-hero .badge {
+  background: #fff;
+  color: var(--primary);
+}
+
+/* Dashboard: facts section with emerald header band */
+[data-theme="flat"] .flat-facts-section {
+  margin-top: 1.5rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #fff;
+}
+[data-theme="flat"] .flat-section-title {
+  background: var(--accent);
+  color: #fff;
+  margin: 0;
+  padding: 0.85rem 1.25rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  border-bottom: none;
+}
+[data-theme="flat"] .flat-facts-grid {
+  margin-top: 0;
+  padding: 1.25rem;
+  background: var(--flat-blue-50);
+}
+
+/* Dashboard: dark legend footer block */
+[data-theme="flat"] .card.flat-dark-block {
+  background: var(--flat-slate-900);
+  color: #fff;
+  margin-top: 1.5rem;
+}
+[data-theme="flat"] .flat-legend-title {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.18);
+  padding-bottom: 0.65rem;
+  font-weight: 800;
+}
+[data-theme="flat"] .flat-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.85rem;
+}
+[data-theme="flat"] .flat-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.2s, background 0.2s;
+}
+[data-theme="flat"] .flat-legend-item:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: scale(1.02);
+}
+[data-theme="flat"] .flat-legend-icon {
+  font-size: 1.5rem;
+  width: 30px;
+  text-align: center;
+  flex-shrink: 0;
+}
+[data-theme="flat"] .flat-legend-icon.muted {
+  opacity: 0.55;
+}
+[data-theme="flat"] .flat-legend-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
+}
+[data-theme="flat"] .flat-legend-pts {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.62);
+  font-weight: 500;
+}
+
+/* Dashboard widget color tints */
+[data-theme="flat"] .flat-widget-blue { background: #DBEAFE !important; }
+[data-theme="flat"] .flat-widget-blue .db-val { color: #1D4ED8; }
+[data-theme="flat"] .flat-widget-green { background: #D1FAE5 !important; }
+[data-theme="flat"] .flat-widget-green .db-val { color: #047857; }
+[data-theme="flat"] .flat-widget-purple { background: #EDE9FE !important; }
+[data-theme="flat"] .flat-widget-purple .db-val { color: #6D28D9; }
+[data-theme="flat"] .flat-widget-amber { background: #FEF3C7 !important; }
+[data-theme="flat"] .flat-widget-amber .db-val { color: #B45309; }
 
 [data-theme="flat"] h1 {
   font-weight: 800;
