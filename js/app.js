@@ -35,6 +35,16 @@ let curTab = 'dashboard', editIdx = null, activeRadP = null;
 let histFilterM='ALL', histFilterS='ALL', radFilterS=db.currentSeason, statsFilterC='ALL';
 let statsFilters = {};
 
+// RAD spin + YouTube audio (eerste 30s van pct1uEhAqBQ)
+const RAD_SPIN_DURATION_MS = 30000;
+const RAD_SPIN_INTERVAL_MS = 120;
+const RAD_YOUTUBE_ID = 'pct1uEhAqBQ';
+let radRollBusy = false;
+let radSpinTimers = null;
+let radYtPlayer = null;
+let radYtApiReady = false;
+let radYtPendingPlay = false;
+
 // --- 2. LOGIC HELPERS ---
 const Cloud = {
     init: async function() {
@@ -116,6 +126,7 @@ function tryLogin() {
         document.getElementById('loginText').innerText = "Uitloggen";
         closeModal();
         showToast("Welkom Admin", "success");
+        warmRadYtPlayer();
         render();
     } else {
         showToast("Wachtwoord onjuist", "error");
@@ -173,6 +184,10 @@ function updateUI() {
 }
 
 function tab(name) {
+    if (radRollBusy && name !== curTab) {
+        showToast("Wacht tot de RAD klaar is…", "info");
+        return;
+    }
     curTab = name; editIdx = null;
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     const btn = document.querySelector(`button[onclick="tab('${name}')"]`);
@@ -206,6 +221,7 @@ function recalcTotals() {
 
 // --- 5. RENDER LOGIC ---
 function render() {
+  if (radRollBusy) return;
   const app = document.getElementById('app'); app.innerHTML = '';
   const renderers = { 'dashboard': renderDashboard, 'p': renderP, 's': renderS, 'r': renderR, 'st': renderStats, 'h': renderHistory, 'c': renderConfig };
   if(['p','s','c'].includes(curTab) && APP_MODE !== 'ADMIN') curTab = 'dashboard';
@@ -527,7 +543,7 @@ function renderR(con) {
                  <label class="stat-lbl">Seizoen</label>
                  <input type="text" id="rS" value="${db.currentSeason}" style="font-weight:bold; margin:0;">
              </div>
-             <button class="btn btn-main" onclick="roll()" style="height:46px; margin-top:1.2rem; min-width:120px; font-size:1.1rem;">🎲 DRAAI</button>
+             <button id="radRollBtn" class="btn btn-main" onclick="roll()" style="height:46px; margin-top:1.2rem; min-width:120px; font-size:1.1rem;">🎲 DRAAI</button>
          </div>
 
          <div id="rOut" style="margin-bottom:1.5rem; text-align:center; min-height:100px; padding:2rem; border:2px dashed var(--border); border-radius:var(--radius); display:flex; flex-direction:column; justify-content:center; align-items:center; transition:0.3s;">
@@ -553,6 +569,8 @@ function renderR(con) {
      </div>
    </div>`;
 
+   if (APP_MODE === 'ADMIN') warmRadYtPlayer();
+
    const p = db.players.find(x => x.id == activeRadP);
    if(p) {
        let rList = p.rads; if(radFilterS !== 'ALL') rList = rList.filter(r => r.s === radFilterS);
@@ -568,8 +586,111 @@ function renderR(con) {
    }
 }
 
-// CORE RAD LOGIC UPDATE V24
+function initRadYoutube() {
+  if (document.getElementById('rad-yt-api')) return;
+
+  const onReady = () => {
+    radYtApiReady = true;
+    createRadYtPlayer();
+  };
+
+  if (window.YT && window.YT.Player) {
+    onReady();
+    return;
+  }
+
+  const prev = window.onYouTubeIframeAPIReady;
+  window.onYouTubeIframeAPIReady = () => {
+    onReady();
+    if (prev) prev();
+  };
+
+  const tag = document.createElement('script');
+  tag.id = 'rad-yt-api';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+}
+
+function createRadYtPlayer() {
+  if (radYtPlayer || !document.getElementById('rad-youtube-player')) return;
+
+  radYtPlayer = new YT.Player('rad-youtube-player', {
+    height: 1,
+    width: 1,
+    videoId: RAD_YOUTUBE_ID,
+    playerVars: {
+      autoplay: 0,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      modestbranding: 1,
+      rel: 0,
+      playsinline: 1,
+      mute: 1
+    },
+    events: {
+      onReady: (e) => {
+        e.target.cueVideoById({ videoId: RAD_YOUTUBE_ID, startSeconds: 0 });
+        if (radYtPendingPlay) {
+          radYtPendingPlay = false;
+          e.target.unMute();
+          e.target.setVolume(100);
+          e.target.seekTo(0, true);
+          e.target.playVideo();
+        }
+      }
+    }
+  });
+}
+
+function warmRadYtPlayer() {
+  initRadYoutube();
+  if (radYtPlayer && typeof radYtPlayer.cueVideoById === 'function') {
+    radYtPlayer.cueVideoById({ videoId: RAD_YOUTUBE_ID, startSeconds: 0 });
+  }
+}
+
+function startRadSpinAudio() {
+  initRadYoutube();
+  if (radYtPlayer && typeof radYtPlayer.playVideo === 'function') {
+    radYtPlayer.unMute();
+    radYtPlayer.setVolume(100);
+    radYtPlayer.seekTo(0, true);
+    radYtPlayer.playVideo();
+  } else {
+    radYtPendingPlay = true;
+    if (radYtApiReady) createRadYtPlayer();
+  }
+}
+
+function stopRadSpinAudio() {
+  radYtPendingPlay = false;
+  if (radYtPlayer && typeof radYtPlayer.pauseVideo === 'function') {
+    radYtPlayer.pauseVideo();
+  }
+}
+
+function clearRadSpinTimers() {
+  if (!radSpinTimers) return;
+  clearInterval(radSpinTimers.spin);
+  clearInterval(radSpinTimers.countdown);
+  clearTimeout(radSpinTimers.finish);
+  radSpinTimers = null;
+}
+
+function setRadRollBtnDisabled(disabled) {
+  const btn = document.getElementById('radRollBtn');
+  if (btn) {
+    btn.disabled = disabled;
+    btn.style.opacity = disabled ? '0.6' : '';
+    btn.style.cursor = disabled ? 'not-allowed' : '';
+  }
+}
+
+// CORE RAD LOGIC UPDATE V24 — 30s spin met YouTube-audio
 function roll() {
+  if (radRollBusy) return;
+
   const s = document.getElementById('rS').value;
   if(!s){ showToast("Geen jaar ingevuld", 'error'); return; }
 
@@ -614,18 +735,49 @@ function roll() {
 
   if(!validPool.length) { showToast("Geen challenges beschikbaar (check filters/cats)!", 'error'); return; }
 
+  const finalPick = validPool[Math.floor(Math.random() * validPool.length)];
   const out = document.getElementById('rOut');
-  out.style.borderColor = 'var(--primary)';
-  let i=0;
+  if (!out) return;
+
+  clearRadSpinTimers();
+  radRollBusy = true;
+  setRadRollBtnDisabled(true);
+  startRadSpinAudio();
+
+  out.classList.add('rad-spinning');
+  out.style.background = '';
+  let remaining = RAD_SPIN_DURATION_MS / 1000;
+
+  out.innerHTML = `
+    <div class="muted-text">🎵 RAD draait...</div>
+    <div id="radTimer" class="rad-timer">${remaining}</div>
+    <div id="radSpinText" class="rad-spin-text">${esc(validPool[0].t)}</div>
+  `;
+
+  const spinText = document.getElementById('radSpinText');
+  const timerEl = document.getElementById('radTimer');
+
   const spin = setInterval(() => {
-      const r = validPool[Math.floor(Math.random() * validPool.length)];
-      out.innerHTML = `<span style="font-size:1.2rem; font-weight:800; color:var(--text);">${r.t}</span>`;
-      i++;
-      if(i>15) {
-          clearInterval(spin);
-          finalizeRoll(r, p, s);
-      }
-  }, 80);
+    const r = validPool[Math.floor(Math.random() * validPool.length)];
+    if (spinText) spinText.textContent = r.t;
+  }, RAD_SPIN_INTERVAL_MS);
+
+  const countdown = setInterval(() => {
+    remaining--;
+    if (timerEl) timerEl.textContent = remaining;
+    if (remaining <= 0) clearInterval(countdown);
+  }, 1000);
+
+  const finish = setTimeout(() => {
+    clearRadSpinTimers();
+    out.classList.remove('rad-spinning');
+    stopRadSpinAudio();
+    finalizeRoll(finalPick, p, s);
+    radRollBusy = false;
+    setRadRollBtnDisabled(false);
+  }, RAD_SPIN_DURATION_MS);
+
+  radSpinTimers = { spin, countdown, finish };
 }
 
 function getCatForTask(tName) {
@@ -637,8 +789,10 @@ function getCatForTask(tName) {
 
 function finalizeRoll(pick, p, s) {
     const out = document.getElementById('rOut');
-    out.style.background = "rgba(99, 102, 241, 0.1)";
-    out.innerHTML = `<div style="font-size:0.8rem; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.5rem;">${pick.c}</div><div style="font-size:1.4rem; margin:5px 0; font-weight:900;">${pick.t}</div><div class="badge" style="margin-top:0.5rem;">+${pick.p} pnt</div>`;
+    if (out) {
+        out.style.background = "rgba(99, 102, 241, 0.1)";
+        out.innerHTML = `<div style="font-size:0.8rem; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.5rem;">${esc(pick.c)}</div><div style="font-size:1.4rem; margin:5px 0; font-weight:900;">${esc(pick.t)}</div><div class="badge" style="margin-top:0.5rem;">+${pick.p} pnt</div>`;
+    }
 
     p.rads.push({id:Date.now(), s:s, text:pick.t, pts:pick.p, done:false});
     saveAll();
