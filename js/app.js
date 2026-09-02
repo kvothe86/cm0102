@@ -126,6 +126,7 @@ function tryLogin() {
         document.getElementById('loginText').innerText = "Uitloggen";
         closeModal();
         showToast("Welkom Admin", "success");
+        warmRadYtPlayer();
         render();
     } else {
         showToast("Wachtwoord onjuist", "error");
@@ -568,7 +569,7 @@ function renderR(con) {
      </div>
    </div>`;
 
-   if (APP_MODE === 'ADMIN') initRadYoutube();
+   if (APP_MODE === 'ADMIN') warmRadYtPlayer();
 
    const p = db.players.find(x => x.id == activeRadP);
    if(p) {
@@ -625,12 +626,15 @@ function createRadYtPlayer() {
       modestbranding: 1,
       rel: 0,
       playsinline: 1,
-      origin: window.location.origin
+      mute: 1
     },
     events: {
       onReady: (e) => {
+        e.target.cueVideoById({ videoId: RAD_YOUTUBE_ID, startSeconds: 0 });
         if (radYtPendingPlay) {
           radYtPendingPlay = false;
+          e.target.unMute();
+          e.target.setVolume(100);
           e.target.seekTo(0, true);
           e.target.playVideo();
         }
@@ -639,9 +643,18 @@ function createRadYtPlayer() {
   });
 }
 
+function warmRadYtPlayer() {
+  initRadYoutube();
+  if (radYtPlayer && typeof radYtPlayer.cueVideoById === 'function') {
+    radYtPlayer.cueVideoById({ videoId: RAD_YOUTUBE_ID, startSeconds: 0 });
+  }
+}
+
 function startRadSpinAudio() {
   initRadYoutube();
   if (radYtPlayer && typeof radYtPlayer.playVideo === 'function') {
+    radYtPlayer.unMute();
+    radYtPlayer.setVolume(100);
     radYtPlayer.seekTo(0, true);
     radYtPlayer.playVideo();
   } else {
@@ -1095,4 +1108,4 @@ function impDB(el) { const r=new FileReader(); r.onload=(e)=>{ try{ const i=JSON
 function wipe() { if(confirm("LET OP: Alles wordt verwijderd!")){ db={players:[], currentSeason:"01/02"}; saveAll(); render(); showToast("Gewist", "error"); } }
 
 // Init
-(async function() { updateUI(); await Cloud.init(); tab('dashboard'); })();
+(async function() { updateUI(); await Cloud.init(); warmRadYtPlayer(); tab('dashboard'); })();
