@@ -11,7 +11,7 @@ A web-based competition tracker inspired by Championship Manager 01/02. Track ma
 - **Statistics** -- Per-manager stats with progression graphs, trophy palmares, and point distribution
 - **History** -- Filterable table of all recorded seasons
 - **Configuration** -- Customize point categories, trophy flags, ranks, and RAD challenges (admin only)
-- **3 Themes** -- Dark (default), Light, and Classic (retro CM 01/02 style)
+- **4 Themes** -- Dark (default), Light, Classic (retro CM 01/02 style), and Flat Design
 - **Cloud Sync** -- Data stored via npoint.io API with localStorage fallback
 - **Mobile Responsive** -- Bottom navigation on smaller screens
 
