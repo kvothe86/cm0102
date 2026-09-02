@@ -468,6 +468,10 @@ body.admin-mode .admin-only { display: flex !important; }
   background: #fff;
   color: var(--primary);
 }
+[data-theme="flat"] .flat-hero td[style*="color:var(--muted)"],
+[data-theme="flat"] .flat-hero span[style*="color:var(--muted)"] {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
 
 [data-theme="flat"] .flat-dark-block {
   background: var(--flat-slate-900);
@@ -476,6 +480,16 @@ body.admin-mode .admin-only { display: flex !important; }
 [data-theme="flat"] .flat-dark-block h3 {
   color: rgba(255, 255, 255, 0.9);
   border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+[data-theme="flat"] .flat-dark-block [style*="grid-template-columns"] > div {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 2px solid rgba(255, 255, 255, 0.14) !important;
+}
+[data-theme="flat"] .flat-dark-block div[style*="font-size:0.75rem"] {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+[data-theme="flat"] .flat-dark-block div[style*="font-weight:700"] {
+  color: #fff;
 }
 
 /* Alternating card color blocks */
