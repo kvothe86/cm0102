@@ -8,7 +8,7 @@ const CLOUD_CONFIG = {
 
 // --- 1. STATE & INIT ---
 let APP_MODE = "READ_ONLY";
-const THEMES = ['dark', 'light', 'classic'];
+const THEMES = ['dark', 'light', 'classic', 'flat'];
 let theme = localStorage.getItem('CM_THEME_V32') || 'dark';
 
 let db = JSON.parse(localStorage.getItem('CM_DB_V32')) || { players: [], currentSeason: "01/02" };
@@ -145,12 +145,16 @@ function getRank(pts) {
 
 function updateUI() {
   document.body.setAttribute('data-theme', theme);
-  document.getElementById('theme-icon').innerText = theme==='light'?'☀️':(theme==='classic'?'💾':'🌙');
-  // Classic Logo Fix
+  const themeIcons = { light: '☀️', classic: '💾', flat: '📐', dark: '🌙' };
+  document.getElementById('theme-icon').innerText = themeIcons[theme] || '🌙';
+  // Theme-specific logo
   const logo = document.getElementById('main-logo');
   if(theme==='classic'){
       logo.innerHTML = 'CHAMPIONSHIP MANAGER';
       logo.style.background = 'var(--accent)';
+  } else if(theme==='flat'){
+      logo.innerHTML = '<span class="flat-logo-badge">CM</span> PRO';
+      logo.style.background = 'transparent';
   } else {
       logo.innerHTML = '<span style="background:var(--primary); color:#fff; padding:2px 8px; border-radius:6px;">CM</span> PRO';
       logo.style.background = 'transparent';
