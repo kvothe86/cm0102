@@ -1,0 +1,1055 @@
+{
+  "db": {
+    "players": [
+      {
+        "id": 1766588695651,
+        "name": "Ruben",
+        "rads": [
+          {
+            "s": "2025/2026",
+            "id": 1766591624469,
+            "pts": 6,
+            "done": false,
+            "text": "Murica challenge (alleen N-Amerikanen)"
+          },
+          {
+            "s": "2025/2026",
+            "id": 1766591845462,
+            "pts": 6,
+            "done": true,
+            "text": "Speel park the bus, defensive, long ball, counter"
+          },
+          {
+            "s": "2025/2026",
+            "id": 1766591851970,
+            "pts": 6,
+            "done": true,
+            "text": "Haal als team niet meer dan 3 rode kaarten"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022296558,
+            "pts": 6,
+            "done": true,
+            "text": "Speel zonder aanvallende vleugelspelers"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022311063,
+            "pts": 6,
+            "done": true,
+            "text": "Ontsla vijf spelers uit je team (zonder vergoeding)"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022321412,
+            "pts": 9,
+            "done": false,
+            "text": "Down Under challenge (alleen Oceaniërs)"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771358009836,
+            "pts": 3,
+            "done": true,
+            "text": "Speel met minstens drie aanvallers"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771358019700,
+            "pts": 3,
+            "done": false,
+            "text": "Team met 1 nationaliteit uit ENG/SPA/GER/ITA/FRA"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771358026563,
+            "pts": 6,
+            "done": true,
+            "text": "Grootste aankoop < €5M"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601138581,
+            "pts": 9,
+            "done": false,
+            "text": "Geen spelers uit eigen land (comp)"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601147051,
+            "pts": 6,
+            "done": false,
+            "text": "Eerste selectie gemiddeld <=23 jaar"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601154168,
+            "pts": 6,
+            "done": false,
+            "text": "Verkoop je beste speler (avg rating 1 januari)"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777830113554,
+            "pts": 9,
+            "done": false,
+            "text": "Speel zonder spits (Catenaccio)"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777830127255,
+            "pts": 9,
+            "done": false,
+            "text": "Eerste selectie gemiddeld =>32 jaar"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777830134883,
+            "pts": 6,
+            "done": false,
+            "text": "Speler haalt twee van de drie (topscorer/assists/HG)"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658226690,
+            "pts": 6,
+            "done": false,
+            "text": "Team met 1 nationaliteit uit NED/BEL/POR/TUR"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658246472,
+            "pts": 3,
+            "done": true,
+            "text": "Geen wintertransfers"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658259388,
+            "pts": 9,
+            "done": false,
+            "text": "Eerste selectie gemiddeld =<20 jaar"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225160121,
+            "pts": 9,
+            "done": false,
+            "text": "Max 1 aankoop"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225170627,
+            "pts": 9,
+            "done": false,
+            "text": "Speler wordt topscorer, top assist gever en hoogste gemiddelde"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225177354,
+            "pts": 6,
+            "done": true,
+            "text": "Speel zonder vleugelverdedigers"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912461709,
+            "pts": 3,
+            "done": false,
+            "text": "Assistent manager <10"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912469116,
+            "pts": 9,
+            "done": false,
+            "text": "Haal als team niet meer dan 1 rode kaart"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912476098,
+            "pts": 6,
+            "done": false,
+            "text": "Favela challenge (alleen Z-Amerikanen)"
+          }
+        ],
+        "seasons": [
+          {
+            "club": "Karaman",
+            "year": "2025/2026",
+            "items": [
+              "Kampioen LL"
+            ],
+            "total": 17,
+            "rating": "6",
+            "tsName": "Semih Kayan",
+            "itemPts": 5,
+            "tsGoals": "17"
+          },
+          {
+            "club": "Karaman",
+            "year": "2026/2027",
+            "items": [
+              "Kampioen LL"
+            ],
+            "total": 17,
+            "rating": "9",
+            "tsName": "Mustafa Kürsat Tümay",
+            "itemPts": 5,
+            "tsGoals": "19"
+          },
+          {
+            "club": "Karaman",
+            "year": "2027/2028",
+            "items": [
+              "Kampioen"
+            ],
+            "total": 19,
+            "rating": "9",
+            "tsName": "Ianis Stoica",
+            "itemPts": 10,
+            "tsGoals": "17"
+          },
+          {
+            "club": "Karaman",
+            "year": "2028/2029",
+            "items": [
+              "Kampioen",
+              "Finalist beker",
+              "CL Phase 2"
+            ],
+            "total": 15,
+            "rating": "8",
+            "tsName": "Mattheus França",
+            "itemPts": 15,
+            "tsGoals": "23"
+          },
+          {
+            "club": "Fenerbahce",
+            "year": "2029/2030",
+            "items": [
+              "Kampioen",
+              "Continentaal landentoernooi Halve finale"
+            ],
+            "total": 14,
+            "rating": "7",
+            "tsName": "Meschak Elia",
+            "itemPts": 14,
+            "tsGoals": "14"
+          },
+          {
+            "club": "Fenerbahce",
+            "year": "2030/2031",
+            "items": [
+              "Kampioen",
+              "Finalist beker",
+              "Continentaal landentoernooi Halve finale",
+              "Vertrek na 1 seizoen",
+              "CL Winnaar"
+            ],
+            "total": 29,
+            "rating": "10",
+            "tsName": "Petr Potmesil",
+            "itemPts": 26,
+            "tsGoals": "29"
+          },
+          {
+            "club": "AC Milan",
+            "year": "2031/2032",
+            "items": [
+              "Kampioen",
+              "Bekerwinnaar",
+              "Continentaal landentoernooi Halve finale",
+              "Vertrek na 1 seizoen"
+            ],
+            "total": 16,
+            "rating": "8",
+            "tsName": "Thomas Campaniello",
+            "itemPts": 10,
+            "tsGoals": "19"
+          }
+        ]
+      },
+      {
+        "id": 1766588698375,
+        "name": "Rene",
+        "rads": [
+          {
+            "s": "2025/2026",
+            "id": 1766591635414,
+            "pts": 6,
+            "done": false,
+            "text": "Ontsla vijf spelers uit je team (zonder vergoeding)"
+          },
+          {
+            "s": "2025/2026",
+            "id": 1766591830731,
+            "pts": 9,
+            "done": false,
+            "text": "Speler wordt topscorer, top assist gever en hoogste gemiddelde"
+          },
+          {
+            "s": "2025/2026",
+            "id": 1766591837206,
+            "pts": 6,
+            "done": false,
+            "text": "Kroepoek challenge (alleen Aziaten)"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022333306,
+            "pts": 3,
+            "done": true,
+            "text": "Assistent manager <10"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022354694,
+            "pts": 3,
+            "done": false,
+            "text": "Team met 1 nationaliteit uit ENG/SPA/GER/ITA/FRA"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022375806,
+            "pts": 6,
+            "done": false,
+            "text": "Speler haalt twee van de drie (topscorer/assists/HG)"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771357916095,
+            "pts": 6,
+            "done": true,
+            "text": "Speel zonder vleugelverdedigers"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771357927622,
+            "pts": 6,
+            "done": false,
+            "text": "Favela challenge (alleen Z-Amerikanen)"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771357933743,
+            "pts": 9,
+            "done": false,
+            "text": "Haal als team niet meer dan 1 rode kaart"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601177650,
+            "pts": 3,
+            "done": true,
+            "text": "Speel met minstens vijf middenvelders"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601184288,
+            "pts": 9,
+            "done": false,
+            "text": "Down Under challenge (alleen Oceaniërs)"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601189785,
+            "pts": 6,
+            "done": false,
+            "text": "Eerste selectie gemiddeld =>30 jaar"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777829998408,
+            "pts": 9,
+            "done": false,
+            "text": "Eerste selectie gemiddeld =<20 jaar"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777830038121,
+            "pts": 6,
+            "done": false,
+            "text": "Team met 1 nationaliteit uit NED/BEL/POR/TUR"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777830050729,
+            "pts": 6,
+            "done": true,
+            "text": "Grootste aankoop < €5M"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658272752,
+            "pts": 6,
+            "done": false,
+            "text": "Verkoop je beste speler (avg rating 1 januari)"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658281190,
+            "pts": 9,
+            "done": false,
+            "text": "Speel met 1 verdediger (Kamikaze)"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658291621,
+            "pts": 3,
+            "done": true,
+            "text": "Speler wordt of topscorer of top assists of hoogste gemiddelde"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225115800,
+            "pts": 9,
+            "done": false,
+            "text": "Team met 1 nationaliteit uit Overige"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225124857,
+            "pts": 3,
+            "done": false,
+            "text": "Speel met minstens vijf verdedigers"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225131483,
+            "pts": 3,
+            "done": false,
+            "text": "Geen wintertransfers"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912391481,
+            "pts": 6,
+            "done": false,
+            "text": "Murica challenge (alleen N-Amerikanen)"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912405070,
+            "pts": 9,
+            "done": false,
+            "text": "Speel zonder spits (Catenaccio)"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912414666,
+            "pts": 9,
+            "done": false,
+            "text": "Eerste selectie gemiddeld =>32 jaar"
+          }
+        ],
+        "seasons": [
+          {
+            "club": "Airdrieonians",
+            "year": "2025/2026",
+            "items": [
+              "Kampioen LL"
+            ],
+            "total": 5,
+            "rating": "8",
+            "tsName": "Charlie Telfer",
+            "itemPts": 5,
+            "tsGoals": "16"
+          },
+          {
+            "club": "Airdrieonians",
+            "year": "2026/2027",
+            "items": [
+              "2e plaats"
+            ],
+            "total": 9,
+            "rating": "7",
+            "tsName": "Idris Kanu",
+            "itemPts": 6,
+            "tsGoals": "9"
+          },
+          {
+            "club": "Airdrieonians",
+            "year": "2027/2028",
+            "items": [
+              "Kampioen"
+            ],
+            "total": 16,
+            "rating": "8.5",
+            "tsName": "Aaron Pressley",
+            "itemPts": 10,
+            "tsGoals": "11"
+          },
+          {
+            "club": "Airdrieonians",
+            "year": "2028/2029",
+            "items": [
+              "Kampioen",
+              "CL Phase 2"
+            ],
+            "total": 16,
+            "rating": "8.5",
+            "tsName": "Oly Brynhildsen",
+            "itemPts": 13,
+            "tsGoals": "32"
+          },
+          {
+            "club": "Airdrieonians",
+            "year": "2029/2030",
+            "items": [
+              "Kampioen",
+              "Bekerwinnaar",
+              "5+ seizoenen (loyaliteit)",
+              "CL Kwartfinale"
+            ],
+            "total": 30,
+            "rating": "9",
+            "tsName": "Jovanny Bolivar",
+            "itemPts": 24,
+            "tsGoals": "32"
+          },
+          {
+            "club": "FC Twente",
+            "year": "2030/2031",
+            "items": [
+              "Kampioen",
+              "Eerste prijs 20+ jaar"
+            ],
+            "total": 19,
+            "rating": "8",
+            "tsName": "Ayadele Thomas",
+            "itemPts": 16,
+            "tsGoals": "22"
+          },
+          {
+            "club": "FC Twente",
+            "year": "2031/2032",
+            "items": [
+              "Kampioen",
+              "Bekerwinnaar",
+              "Nat. Supercup",
+              "CL Winnaar"
+            ],
+            "total": 39,
+            "rating": "10",
+            "tsName": "Jeraldino Bergraaf",
+            "itemPts": 39,
+            "tsGoals": "15"
+          }
+        ]
+      },
+      {
+        "id": 1766588700733,
+        "name": "Remy",
+        "rads": [
+          {
+            "s": "2025/2026",
+            "id": 1766591645054,
+            "pts": 6,
+            "done": false,
+            "text": "Team met 1 nationaliteit uit NED/BEL/POR/TUR"
+          },
+          {
+            "s": "2025/2026",
+            "id": 1766591815488,
+            "pts": 9,
+            "done": false,
+            "text": "Eerste selectie gemiddeld =>32 jaar"
+          },
+          {
+            "s": "2025/2026",
+            "id": 1766591822167,
+            "pts": 3,
+            "done": true,
+            "text": "Speel met minstens drie aanvallers"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022255953,
+            "pts": 6,
+            "done": false,
+            "text": "Alleen Bosman/vrije transfers"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022268269,
+            "pts": 6,
+            "done": false,
+            "text": "Murica challenge (alleen N-Amerikanen)"
+          },
+          {
+            "s": "2026/2027",
+            "id": 1769022277736,
+            "pts": 9,
+            "done": false,
+            "text": "Speel met 1 verdediger (Kamikaze)"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771357954804,
+            "pts": 9,
+            "done": false,
+            "text": "Down Under challenge (alleen Oceaniërs)"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771357962867,
+            "pts": 9,
+            "done": true,
+            "text": "Speel zonder spits (Catenaccio)"
+          },
+          {
+            "s": "2027/2028",
+            "id": 1771357972083,
+            "pts": 9,
+            "done": true,
+            "text": "Geen staf"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601204802,
+            "pts": 9,
+            "done": false,
+            "text": "Speler wordt topscorer, top assist gever en hoogste gemiddelde"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601217327,
+            "pts": 3,
+            "done": true,
+            "text": "Assistent manager <10"
+          },
+          {
+            "s": "2028/2029",
+            "id": 1773601228225,
+            "pts": 9,
+            "done": false,
+            "text": "Team met 1 nationaliteit uit Overige"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777830068558,
+            "pts": 6,
+            "done": true,
+            "text": "Ontsla vijf spelers uit je team (zonder vergoeding)"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777830079851,
+            "pts": 9,
+            "done": false,
+            "text": "Haal als team niet meer dan 1 rode kaart"
+          },
+          {
+            "s": "2029/2030",
+            "id": 1777830099505,
+            "pts": 3,
+            "done": true,
+            "text": "Alleen Nederlandse staf"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658313739,
+            "pts": 6,
+            "done": false,
+            "text": "Fatbike jongeren challenge (alleen Afrikanen)"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658324557,
+            "pts": 6,
+            "done": false,
+            "text": "Speel zonder vleugelverdedigers"
+          },
+          {
+            "s": "2030/2031",
+            "id": 1779658346202,
+            "pts": 3,
+            "done": false,
+            "text": "Haal als team niet meer dan 5 rode kaarten"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225057652,
+            "pts": 9,
+            "done": false,
+            "text": "Eerste selectie gemiddeld =<20 jaar"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225068514,
+            "pts": 6,
+            "done": false,
+            "text": "Verkoop je beste speler (avg rating 1 januari)"
+          },
+          {
+            "s": "2031/2032",
+            "id": 1784225076583,
+            "pts": 9,
+            "done": true,
+            "text": "Geen spelers uit eigen land (comp)"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912433829,
+            "pts": 6,
+            "done": false,
+            "text": "Eerste selectie gemiddeld =>30 jaar"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912440625,
+            "pts": 3,
+            "done": false,
+            "text": "Speel met minstens vijf middenvelders"
+          },
+          {
+            "s": "2032/2033",
+            "id": 1786912446511,
+            "pts": 6,
+            "done": false,
+            "text": "Speler haalt twee van de drie (topscorer/assists/HG)"
+          }
+        ],
+        "seasons": [
+          {
+            "club": "1860 München",
+            "year": "2025/2026",
+            "items": [
+              "Kampioen LL"
+            ],
+            "total": 8,
+            "rating": "9",
+            "tsName": "Kevin Volland",
+            "itemPts": 5,
+            "tsGoals": "36"
+          },
+          {
+            "club": "1860 München",
+            "year": "2026/2027",
+            "items": [
+              "Promotie LL"
+            ],
+            "total": 3,
+            "rating": "7",
+            "tsName": "Adam Maher",
+            "itemPts": 3,
+            "tsGoals": "13"
+          },
+          {
+            "club": "1860 München",
+            "year": "2027/2028",
+            "items": [
+              "2e plaats"
+            ],
+            "total": 24,
+            "rating": "7",
+            "tsName": "Joel Ideho",
+            "itemPts": 6,
+            "tsGoals": "10"
+          },
+          {
+            "club": "1860 München",
+            "year": "2028/2029",
+            "items": [
+              "2e plaats"
+            ],
+            "total": 9,
+            "rating": "6.5",
+            "tsName": "Abdellah Ouazane",
+            "itemPts": 6,
+            "tsGoals": "10"
+          },
+          {
+            "club": "1860 München",
+            "year": "2029/2030",
+            "items": [
+              "Kampioen",
+              "5+ seizoenen (loyaliteit)",
+              "CL Phase 2"
+            ],
+            "total": 25,
+            "rating": "8",
+            "tsName": "Ondrej Latal",
+            "itemPts": 16,
+            "tsGoals": "19"
+          },
+          {
+            "club": "1860 München",
+            "year": "2030/2031",
+            "items": [
+              "Kampioen",
+              "Nat. Supercup",
+              "CL Phase 2"
+            ],
+            "total": 16,
+            "rating": "7",
+            "tsName": "Daniel Jedlicka",
+            "itemPts": 16,
+            "tsGoals": "25"
+          },
+          {
+            "club": "Borussia Dortmund",
+            "year": "2031/2032",
+            "items": [
+              "Kampioen",
+              "UEFA Cup Halve finale"
+            ],
+            "total": 24,
+            "rating": "4",
+            "tsName": "Michael Lukac",
+            "itemPts": 15,
+            "tsGoals": "29"
+          }
+        ]
+      }
+    ],
+    "currentSeason": "2032/2033"
+  },
+  "cfg": {
+    "goals": {
+      "Gold": 150,
+      "Bronze": 25,
+      "Legend": 1000,
+      "Silver": 75,
+      "Diamond": 350,
+      "Champion": 700,
+      "Platinum": 500
+    },
+    "points": {
+      "Europa": {
+        "CL Phase 2": {
+          "t": false,
+          "v": 3
+        },
+        "CL Winnaar": {
+          "t": true,
+          "v": 20
+        },
+        "CL Finalist": {
+          "t": false,
+          "v": 12
+        },
+        "CL Kwartfinale": {
+          "t": false,
+          "v": 5
+        },
+        "CL Halve finale": {
+          "t": false,
+          "v": 8
+        },
+        "UEFA Cup Winnaar": {
+          "t": true,
+          "v": 12
+        },
+        "UEFA Cup Finalist": {
+          "t": false,
+          "v": 7
+        },
+        "UEFA Cup Kwartfinale": {
+          "t": false,
+          "v": 3
+        },
+        "UEFA Cup Halve finale": {
+          "t": false,
+          "v": 5
+        }
+      },
+      "Supercup": {
+        "Nat. Supercup": {
+          "t": true,
+          "v": 3
+        },
+        "Europese Supercup Winnaar": {
+          "t": true,
+          "v": 3
+        }
+      },
+      "Nationaal": {
+        "Kampioen": {
+          "t": true,
+          "v": 10
+        },
+        "2e plaats": {
+          "t": false,
+          "v": 6
+        },
+        "3e plaats": {
+          "t": false,
+          "v": 4
+        },
+        "Kampioen LL": {
+          "t": true,
+          "v": 5
+        },
+        "Promotie LL": {
+          "t": false,
+          "v": 3
+        },
+        "Bekerwinnaar": {
+          "t": true,
+          "v": 6
+        },
+        "Finalist beker": {
+          "t": false,
+          "v": 2
+        },
+        "Europees voetbal": {
+          "t": false,
+          "v": 2
+        }
+      },
+      "Teamwissel": {
+        "3+ seizoenen": {
+          "t": false,
+          "v": 0
+        },
+        "Vertrek na 1 seizoen": {
+          "t": false,
+          "v": -10
+        },
+        "Vertrek na 2 seizoenen": {
+          "t": false,
+          "v": -5
+        },
+        "5+ seizoenen (loyaliteit)": {
+          "t": false,
+          "v": 3
+        }
+      },
+      "Landenteams": {
+        "WK Landenteams Winnaar": {
+          "t": true,
+          "v": 20
+        },
+        "WK Landenteams Finalist": {
+          "t": false,
+          "v": 12
+        },
+        "WK Landenteams Kwartfinale": {
+          "t": false,
+          "v": 5
+        },
+        "WK Landenteams Halve finale": {
+          "t": false,
+          "v": 8
+        },
+        "Continentaal landentoernooi Winnaar": {
+          "t": true,
+          "v": 10
+        },
+        "Continentaal landentoernooi Finalist": {
+          "t": false,
+          "v": 6
+        },
+        "Continentaal landentoernooi Halve finale": {
+          "t": false,
+          "v": 4
+        }
+      },
+      "Trophy Drought": {
+        "Eerste prijs 10+ jaar": {
+          "t": false,
+          "v": 3
+        },
+        "Eerste prijs 20+ jaar": {
+          "t": false,
+          "v": 6
+        },
+        "Eerste prijs 30+ jaar": {
+          "t": false,
+          "v": 10
+        }
+      },
+      "Wereld (Clubs)": {
+        "WK Clubteams Winnaar": {
+          "t": true,
+          "v": 15
+        },
+        "WK Clubteams Finalist": {
+          "t": false,
+          "v": 8
+        },
+        "WK Clubteams Halve finalist": {
+          "t": false,
+          "v": 4
+        }
+      }
+    },
+    "rad_challenges": {
+      "Staff": {
+        "Assistent manager <10": 3,
+        "Alleen Nederlandse staf": 3,
+        "Max 2 stafleden totaal": 3,
+        "Geen staf": 6,
+        "Alle coaches met coaching attributes onder de 5": 6,
+        "Geen fysio én geen scout": 3
+      },
+      "Spelers": {
+        "Speler wordt topscorer OF top assists OF hoogste gemiddelde": 3,
+        "Speler haalt twee van de drie (topscorer/assists/HG)": 6,
+        "Minstens 3 spelers met 10+ goals": 6,
+        "Minstens 3 spelers met 5+ assists": 6,
+        "Keeper 10+ clean sheets": 6,
+        "Haal als team niet meer dan 5 rode kaarten": 3,
+        "Haal als team niet meer dan 3 rode kaarten": 6,
+        "Speler scoort 20+ goals": 9
+      },
+      "Tactiek": {
+        "Speel met minstens drie aanvallers": 3,
+        "Speel met minstens vijf middenvelders": 3,
+        "Speel met minstens vijf verdedigers": 3,
+        "Altijd 4-4-2 (geen andere formatie)": 3,
+        "Speel zonder vleugelverdedigers": 6,
+        "Speel zonder aanvallende vleugelspelers": 6,
+        "Speel park the bus, defensive, long ball, counter": 6,
+        "Speel zonder spits (min. 15 comp-wedstrijden)": 6,
+        "Speel met sweeper in basiself": 6
+      },
+      "Leeftijd": {
+        "5 spelers onder 21 in basiself": 3,
+        "5 spelers onder 23 in basiself": 3,
+        "3 spelers 35+ in basiself": 6,
+        "5 spelers 30+ in basiself": 6,
+        "5 spelers 32+ in basiself": 9,
+        "Gemiddelde leeftijd basiself <=23": 6,
+        "Gemiddelde leeftijd basiself >=30": 6,
+        "Geen speler jonger dan 18 in basiself": 3
+      },
+      "Nationaliteit": {
+        "5 buitenlanders in basiself": 3,
+        "5 spelers uit ENG/SPA/GER/ITA/FRA": 3,
+        "5 spelers uit NED/BEL/POR/TUR": 3,
+        "5 spelers uit Z-Amerika": 6,
+        "5 spelers uit Afrika": 6,
+        "5 spelers uit Oost-Europa": 6,
+        "5 spelers uit Scandinavië": 6,
+        "Minstens 5 verschillende nationaliteiten in basiself": 6,
+        "3 spelers uit hetzelfde land (≠ eigen land)": 3,
+        "Geen speler uit eigen land in basiself (min. 15x)": 9
+      },
+      "Transfers": {
+        "Geen wintertransfers": 3,
+        "Geen verkopen in winter": 3,
+        "Grootste aankoop < €5M": 6,
+        "Geen aankopen > €2M": 6,
+        "Alleen Bosman/vrije transfers": 6,
+        "Alleen spelers <23 kopen": 6,
+        "Max 3 aankopen": 6,
+        "Verkoop je beste speler (avg rating 1 januari)": 6,
+        "Ontsla vijf spelers uit je team (zonder vergoeding)": 6,
+        "Max 1 aankoop": 9
+      },
+      "Selectie": {
+        "5 spelers linksbenig in basiself": 3,
+        "5 spelers rechtsbenig in basiself": 3,
+        "Geen speler met waarde > €10M in basiself": 6,
+        "Minstens 3 homegrown spelers in basiself": 6,
+        "Keeper + 4 verdedigers allemaal 28+": 6,
+        "Minstens 2 jeugdspelers gepromoveerd naar basiself": 6,
+        "Minstens 3 spelers met internationale caps dit seizoen": 6
+      }
+    }
+  }
+}
