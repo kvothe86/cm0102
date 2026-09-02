@@ -890,3 +890,42 @@ body.admin-mode .admin-only { display: flex !important; }
 [data-theme="flat"] main select:focus-visible {
   outline-color: var(--primary);
 }
+
+/* RAD spin — 30s countdown + YouTube audio */
+#rad-youtube-player {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+#rOut.rad-spinning {
+  border-color: var(--primary) !important;
+  animation: rad-pulse 1s ease-in-out infinite;
+}
+
+@keyframes rad-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.35); }
+  50% { box-shadow: 0 0 24px 4px rgba(99, 102, 241, 0.25); }
+}
+
+.rad-timer {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1;
+  margin: 0.5rem 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.rad-spin-text {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-top: 0.75rem;
+  max-width: 100%;
+}
