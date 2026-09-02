@@ -669,6 +669,34 @@ function addManRad() {
 }
 
 // --- 7. STATS & HISTORY ---
+function calcManagerStats(seasons, relevantRads, tot, itemTot, radTot) {
+   const count = seasons.length;
+   let best = { v: -1, y: '' }, worst = { v: Infinity, y: '' }, maxRating = null;
+   let totRate = 0, ratedCnt = 0;
+   seasons.forEach(s => {
+      if (s.total > best.v) best = { v: s.total, y: s.year };
+      if (s.total < worst.v) worst = { v: s.total, y: s.year };
+      if (s.rating) {
+         const r = parseFloat(s.rating);
+         if (!isNaN(r)) { totRate += r; ratedCnt++; if (maxRating === null || r > maxRating) maxRating = r; }
+      }
+   });
+   const totRads = relevantRads.length, doneRads = relevantRads.filter(r => r.done).length;
+   return {
+      seasons: count,
+      avgPts: count > 0 ? Math.round(tot / count) : '-',
+      bestSeason: count > 0 ? `${best.v} (${best.y})` : '-',
+      worstSeason: count > 0 ? `${worst.v} (${worst.y})` : '-',
+      maxRating: maxRating !== null ? maxRating : '-',
+      uniqueClubs: new Set(seasons.map(s => s.club).filter(c => c)).size,
+      avgRate: ratedCnt > 0 ? (totRate / ratedCnt).toFixed(1) : '-',
+      totRads, doneRads,
+      gPerc: totRads > 0 ? Math.round((doneRads / totRads) * 100) : 0,
+      pp1: tot > 0 ? (itemTot / tot) * 100 : 0,
+      pp2: tot > 0 ? (radTot / tot) * 100 : 0
+   };
+}
+
 function renderStats(con) {
    if(!db.players.length) { con.innerHTML=`<div class="card">Geen data beschikbaar.</div>`; return; }
 
@@ -707,14 +735,10 @@ function renderStats(con) {
        let radTot = relevantRads.filter(r=>r.done).reduce((a,r)=>a+r.pts, 0);
        let tot = itemTot + radTot;
 
-       let totRads = relevantRads.length, doneRads = relevantRads.filter(r=>r.done).length, gPerc = totRads>0?Math.round((doneRads/totRads)*100):0;
+       const ms = calcManagerStats(seasons, relevantRads, tot, itemTot, radTot);
 
-       // Distribution Calc
-       let pp1 = tot>0?(itemTot/tot)*100:0, pp2 = tot>0?(radTot/tot)*100:0;
-
-       let pTopS = {n:'-', g:0, y:'-'}; let totRate = 0, ratedCnt = 0;
-       seasons.forEach(s => { let g = parseInt(s.tsGoals || 0); if(g > pTopS.g) pTopS = {n:s.tsName, g:g, y:s.year}; if(s.rating) { totRate += parseFloat(s.rating); ratedCnt++; } });
-       let avgRate = ratedCnt > 0 ? (totRate / ratedCnt).toFixed(1) : '-';
+       let pTopS = {n:'-', g:0, y:'-'};
+       seasons.forEach(s => { let g = parseInt(s.tsGoals || 0); if(g > pTopS.g) pTopS = {n:s.tsName, g:g, y:s.year}; });
 
        const rp = getRank(tot);
        const myClubs = [...new Set(p.seasons.map(s => s.club))].filter(c=>c).sort();
@@ -729,16 +753,19 @@ function renderStats(con) {
               ${clubSel}
           </div>
 
-          <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.5rem;">
-              <div style="flex:3; min-width:300px; height:180px; background:rgba(0,0,0,0.1); border-radius:var(--radius); border:1px solid var(--border); overflow:hidden; display:flex; flex-direction:column;">
-                  <div style="padding:10px; font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:bold;">Progressie</div>
-                  <div style="flex:1; padding:0 10px 10px 10px;">${renderGraph(seasons)}</div>
+          <div class="stats-manager-row">
+              <div class="stats-graph-panel">
+                  <div class="stats-panel-label">Progressie</div>
+                  <div class="stats-graph-inner">${renderGraph(seasons)}</div>
               </div>
-              <div style="flex:1; min-width:120px; display:flex; flex-direction:column; gap:1rem;">
-                  <div style="background:rgba(99, 102, 241, 0.1); border:1px solid var(--primary); border-radius:var(--radius); padding:1rem; text-align:center;">
-                      <div style="font-size:2rem; font-weight:900; color:var(--primary);">${avgRate}</div>
-                      <div class="stat-lbl">Gem. Cijfer</div>
-                  </div>
+              <div class="stats-manager-metrics">
+                  <div class="stats-metric"><div class="stats-metric-val">${ms.seasons}</div><div class="stat-lbl">Seizoenen</div></div>
+                  <div class="stats-metric"><div class="stats-metric-val">${ms.avgPts}</div><div class="stat-lbl">Ø punten/seizoen</div></div>
+                  <div class="stats-metric"><div class="stats-metric-val">${esc(String(ms.bestSeason))}</div><div class="stat-lbl">Beste seizoen</div></div>
+                  <div class="stats-metric"><div class="stats-metric-val">${esc(String(ms.worstSeason))}</div><div class="stat-lbl">Slechtste seizoen</div></div>
+                  <div class="stats-metric"><div class="stats-metric-val">${ms.maxRating}</div><div class="stat-lbl">Hoogste cijfer</div></div>
+                  <div class="stats-metric"><div class="stats-metric-val">${ms.uniqueClubs}</div><div class="stat-lbl">Unieke clubs</div></div>
+                  <div class="stats-metric"><div class="stats-metric-val">${ms.avgRate}</div><div class="stat-lbl">Gem. Cijfer</div></div>
               </div>
           </div>
 
@@ -746,16 +773,16 @@ function renderStats(con) {
               <div>
                   <h3>Palmares</h3>
                   <div style="max-height:250px; overflow-y:auto; padding-right:5px;">${renderTrophies(seasons)}</div>
-                  ${pTopS.g > 0 ? `<div style="margin-top:1rem; background:rgba(0,0,0,0.2); padding:1rem; border-radius:var(--radius);">Topscorer: <b style="color:var(--accent)">${esc(pTopS.n)}</b> (${pTopS.g}) <span class="muted-text">${pTopS.y}</span></div>` : ''}
+                  ${pTopS.g > 0 ? `<div class="stats-subpanel" style="margin-top:1rem;">Topscorer: <b style="color:var(--accent)">${esc(pTopS.n)}</b> (${pTopS.g}) <span class="muted-text">${pTopS.y}</span></div>` : ''}
               </div>
               <div>
                   <h3>RAD Challenges</h3>
-                  <div style="background:rgba(0,0,0,0.2); border-radius:var(--radius); padding:1.5rem; text-align:center;">
-                       <div style="font-size:2.5rem; font-weight:900; color:var(--text);">${gPerc}%</div>
-                       <div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${gPerc}%; background:var(--accent);"></div></div>
+                  <div class="stats-subpanel" style="padding:1.5rem; text-align:center;">
+                       <div style="font-size:2.5rem; font-weight:900; color:var(--text);">${ms.gPerc}%</div>
+                       <div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${ms.gPerc}%; background:var(--accent);"></div></div>
                        <div style="display:flex; justify-content:space-between; margin-top:1rem; font-size:0.9rem;">
-                           <span>Voltooid: <b>${doneRads}</b></span>
-                           <span>Totaal: <b>${totRads}</b></span>
+                           <span>Voltooid: <b>${ms.doneRads}</b></span>
+                           <span>Totaal: <b>${ms.totRads}</b></span>
                        </div>
                   </div>
               </div>
@@ -764,12 +791,12 @@ function renderStats(con) {
           <div style="border-top:1px solid var(--border); margin-top:1.5rem; padding-top:1rem;">
               <label class="stat-lbl">Puntverdeling</label>
               <div class="dist-bar">
-                  <div class="dist-seg" style="width:${pp1}%; background:var(--accent2);"></div>
-                  <div class="dist-seg" style="width:${pp2}%; background:var(--accent);"></div>
+                  <div class="dist-seg" style="width:${ms.pp1}%; background:var(--accent2);"></div>
+                  <div class="dist-seg" style="width:${ms.pp2}%; background:var(--accent);"></div>
               </div>
               <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:0.5rem; color:var(--muted);">
-                  <span style="color:var(--accent2);">● Resultaten (${Math.round(pp1)}%)</span>
-                  <span style="color:var(--accent);">● RAD (${Math.round(pp2)}%)</span>
+                  <span style="color:var(--accent2);">● Resultaten (${Math.round(ms.pp1)}%)</span>
+                  <span style="color:var(--accent);">● RAD (${Math.round(ms.pp2)}%)</span>
               </div>
           </div>
        </div>`;
