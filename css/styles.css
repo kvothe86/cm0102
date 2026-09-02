@@ -956,8 +956,8 @@ body.admin-mode .admin-only { display: flex !important; }
   outline-color: var(--primary);
 }
 
-/* RAD spin — 30s countdown + YouTube audio */
-#rad-youtube-player {
+/* RAD spin — 30s countdown + lokale audio (geen YouTube-reclame) */
+#rad-spin-audio {
   position: fixed;
   width: 1px;
   height: 1px;

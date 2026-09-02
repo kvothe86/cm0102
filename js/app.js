@@ -35,15 +35,13 @@ let curTab = 'dashboard', editIdx = null, activeRadP = null;
 let histFilterM='ALL', histFilterS='ALL', radFilterS=db.currentSeason, statsFilterC='ALL';
 let statsFilters = {};
 
-// RAD spin + YouTube audio (eerste 30s van pct1uEhAqBQ)
+// RAD spin — lokale audio (eerste 30s, geen YouTube-reclame)
 const RAD_SPIN_DURATION_MS = 30000;
 const RAD_SPIN_INTERVAL_MS = 120;
-const RAD_YOUTUBE_ID = 'pct1uEhAqBQ';
+const RAD_SPIN_AUDIO_SRC = 'audio/rad-spin.mp3';
 let radRollBusy = false;
 let radSpinTimers = null;
-let radYtPlayer = null;
-let radYtApiReady = false;
-let radYtPendingPlay = false;
+let radSpinAudio = null;
 
 // --- 2. LOGIC HELPERS ---
 const Cloud = {
@@ -126,7 +124,7 @@ function tryLogin() {
         document.getElementById('loginText').innerText = "Uitloggen";
         closeModal();
         showToast("Welkom Admin", "success");
-        warmRadYtPlayer();
+        warmRadSpinAudio();
         render();
     } else {
         showToast("Wachtwoord onjuist", "error");
@@ -569,7 +567,7 @@ function renderR(con) {
      </div>
    </div>`;
 
-   if (APP_MODE === 'ADMIN') warmRadYtPlayer();
+   if (APP_MODE === 'ADMIN') warmRadSpinAudio();
 
    const p = db.players.find(x => x.id == activeRadP);
    if(p) {
@@ -586,87 +584,34 @@ function renderR(con) {
    }
 }
 
-function initRadYoutube() {
-  if (document.getElementById('rad-yt-api')) return;
-
-  const onReady = () => {
-    radYtApiReady = true;
-    createRadYtPlayer();
-  };
-
-  if (window.YT && window.YT.Player) {
-    onReady();
-    return;
-  }
-
-  const prev = window.onYouTubeIframeAPIReady;
-  window.onYouTubeIframeAPIReady = () => {
-    onReady();
-    if (prev) prev();
-  };
-
-  const tag = document.createElement('script');
-  tag.id = 'rad-yt-api';
-  tag.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(tag);
+function getRadSpinAudio() {
+  if (radSpinAudio) return radSpinAudio;
+  radSpinAudio = document.getElementById('rad-spin-audio');
+  return radSpinAudio;
 }
 
-function createRadYtPlayer() {
-  if (radYtPlayer || !document.getElementById('rad-youtube-player')) return;
-
-  radYtPlayer = new YT.Player('rad-youtube-player', {
-    height: 1,
-    width: 1,
-    videoId: RAD_YOUTUBE_ID,
-    playerVars: {
-      autoplay: 0,
-      controls: 0,
-      disablekb: 1,
-      fs: 0,
-      modestbranding: 1,
-      rel: 0,
-      playsinline: 1,
-      mute: 1
-    },
-    events: {
-      onReady: (e) => {
-        e.target.cueVideoById({ videoId: RAD_YOUTUBE_ID, startSeconds: 0 });
-        if (radYtPendingPlay) {
-          radYtPendingPlay = false;
-          e.target.unMute();
-          e.target.setVolume(100);
-          e.target.seekTo(0, true);
-          e.target.playVideo();
-        }
-      }
-    }
-  });
-}
-
-function warmRadYtPlayer() {
-  initRadYoutube();
-  if (radYtPlayer && typeof radYtPlayer.cueVideoById === 'function') {
-    radYtPlayer.cueVideoById({ videoId: RAD_YOUTUBE_ID, startSeconds: 0 });
-  }
+function warmRadSpinAudio() {
+  const a = getRadSpinAudio();
+  if (a) a.load();
 }
 
 function startRadSpinAudio() {
-  initRadYoutube();
-  if (radYtPlayer && typeof radYtPlayer.playVideo === 'function') {
-    radYtPlayer.unMute();
-    radYtPlayer.setVolume(100);
-    radYtPlayer.seekTo(0, true);
-    radYtPlayer.playVideo();
-  } else {
-    radYtPendingPlay = true;
-    if (radYtApiReady) createRadYtPlayer();
+  const a = getRadSpinAudio();
+  if (!a) return;
+  a.currentTime = 0;
+  const playPromise = a.play();
+  if (playPromise) {
+    playPromise.catch(() => {
+      showToast('Geen RAD-muziek — plaats audio/rad-spin.mp3 (30s clip)', 'info');
+    });
   }
 }
 
 function stopRadSpinAudio() {
-  radYtPendingPlay = false;
-  if (radYtPlayer && typeof radYtPlayer.pauseVideo === 'function') {
-    radYtPlayer.pauseVideo();
+  const a = getRadSpinAudio();
+  if (a) {
+    a.pause();
+    a.currentTime = 0;
   }
 }
 
@@ -687,7 +632,7 @@ function setRadRollBtnDisabled(disabled) {
   }
 }
 
-// CORE RAD LOGIC UPDATE V24 — 30s spin met YouTube-audio
+// CORE RAD LOGIC UPDATE V24 — 30s spin met lokale audio
 function roll() {
   if (radRollBusy) return;
 
