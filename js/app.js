@@ -94,6 +94,9 @@ function openModal(title, content, footerHtml = '') {
 }
 function closeModal() {
     document.getElementById('modal-overlay').classList.remove('open');
+    // Wachtwoordveld uit DOM — voorkomt Bitwarden/PM popups bij andere acties (bv. RAD draaien)
+    document.getElementById('m-body').innerHTML = '';
+    document.getElementById('m-footer').innerHTML = '';
 }
 
 function openLoginModal() {
@@ -109,7 +112,10 @@ function openLoginModal() {
         return;
     }
     openModal("Admin Login",
-      `<input type="password" id="adminPass" placeholder="Wachtwoord..." onkeypress="if(event.key==='Enter') tryLogin()">`,
+      `<form autocomplete="off" data-bwignore="true" onsubmit="tryLogin(); return false;">
+         <input type="password" id="adminPass" name="cm-admin-token" placeholder="Wachtwoord..."
+           autocomplete="new-password" data-bwignore="true" data-1p-ignore data_lpignore="true" data-form-type="other">
+       </form>`,
       `<button class="btn btn-sub" onclick="closeModal()">Annuleer</button><button class="btn btn-main" onclick="tryLogin()">Login</button>`
     );
 }
