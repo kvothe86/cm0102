@@ -38,7 +38,6 @@ let statsFilters = {};
 // RAD spin — lokale audio (eerste 30s, geen YouTube-reclame)
 const RAD_SPIN_DURATION_MS = 30000;
 const RAD_SPIN_INTERVAL_MS = 120;
-const RAD_SPIN_AUDIO_SRC = 'audio/rad-spin.mp3';
 let radRollBusy = false;
 let radSpinTimers = null;
 let radSpinAudio = null;
